@@ -14,7 +14,7 @@ public class Category {
     private int displayOrder;
     private boolean deleted;
 
-    private Category(String name, int displayOrder, boolean deleted){
+    public Category(String name, int displayOrder, boolean deleted){
         this.name = name;
         this.displayOrder = displayOrder;
         this.deleted = deleted;
