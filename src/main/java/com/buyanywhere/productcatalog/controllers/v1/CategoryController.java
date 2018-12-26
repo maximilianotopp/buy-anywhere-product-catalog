@@ -26,9 +26,7 @@ public class CategoryController {
             method=RequestMethod.GET,
             value="/{id}"
     )
-    public Category findCategoty(@PathVariable("id") long id) {
-        Category category = repository.findCategoryById(id);
-        if (category == null) throw new CategoryNotFoundException();
-        return category;
+    public Category get(@PathVariable("id") long id) {
+        return repository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
     }
 }
