@@ -16,10 +16,23 @@ public class CategoryController {
 
     @RequestMapping(
             method = RequestMethod.POST,
-            value = "/"
+            value = "/create"
     )
-    public Category post(@RequestBody Category data){
+    public Category create(@RequestBody Category data){
         return repository.save(data);
+    }
+
+    @RequestMapping(
+            method = RequestMethod.POST,
+            value = "/update"
+    )
+    public Category update(@RequestBody Category data){
+        return repository.findById(data.getId()).map(category -> {
+            category.setName(data.getName());
+            category.setDisplayOrder(data.getDisplayOrder());
+            return repository.save(category);
+        })
+                .orElseThrow(() -> new CategoryNotFoundException(data.getId()));
     }
 
     @RequestMapping(
