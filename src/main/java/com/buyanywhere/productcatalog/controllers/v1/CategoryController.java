@@ -14,6 +14,10 @@ public class CategoryController {
         this.repository = repository;
     }
 
+    private boolean exist (long id){
+        return repository.findById(id).isPresent();
+    }
+
     @RequestMapping(
             method = RequestMethod.POST,
             value = "/"
