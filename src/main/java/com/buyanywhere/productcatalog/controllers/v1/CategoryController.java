@@ -14,6 +14,18 @@ public class CategoryController {
         this.repository = repository;
     }
 
+    private boolean exist (long id){
+        return repository.findById(id).isPresent();
+    }
+
+    @RequestMapping(
+            method=RequestMethod.GET,
+            value="/{id}"
+    )
+    public Category get(@PathVariable("id") long id) {
+        return repository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
+    }
+
     @RequestMapping(
             method = RequestMethod.POST,
             value = "/"
@@ -23,10 +35,14 @@ public class CategoryController {
     }
 
     @RequestMapping(
-            method=RequestMethod.GET,
-            value="/{id}"
+            method = RequestMethod.DELETE,
+            value = "/{id}"
     )
-    public Category get(@PathVariable("id") long id) {
-        return repository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
+    public Category delete(@PathVariable("id") long id){
+        if (!exist(id) || repository.findById(id).get().isDeleted())
+            throw new CategoryNotFoundException(id);
+        Category category = repository.getOne(id);
+        category.setDeleted(true);
+        return repository.save(category);
     }
 }
