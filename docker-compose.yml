@@ -3,7 +3,7 @@ version: '3.1'
 
 services:
 
-  db:
+  product-catalog-db:
     container_name: product-catalog-db
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
@@ -15,3 +15,12 @@ services:
       MYSQL_DATABASE: productCatalog
       MYSQL_USER: admin
       MYSQL_PASSWORD: admin
+
+  product-catalog:
+    container_name: repo-product-catalog
+    image: mtopp/buy-anywhere-product-catalog:latest
+#    image: product-catalog-image
+    ports:
+      - 8081:8081
+    links:
+      - "product-catalog-db"
