@@ -36,9 +36,18 @@ public class CategoryController {
             value = "/"
     )
     public Category put(@RequestBody Category data){
-        if (!exist(data.getId())) throw new CategoryNotFoundException(data.getId());
-        if(data.getName().isEmpty()) throw new ArgumentNotValidException("name");
-        if(data.getDisplayOrder() < 0) throw new ArgumentNotValidException("displayOrder");
+        if (!exist(data.getId())) {
+            throw new CategoryNotFoundException(data.getId());
+        }
+
+        if(data.getName().isEmpty()) {
+            throw new ArgumentNotValidException("name");
+        }
+
+        if(data.getDisplayOrder() < 0) {
+            throw new ArgumentNotValidException("displayOrder");
+        }
+
         data.setName(data.getName().trim());
         return repository.save(data);
     }
@@ -48,7 +57,10 @@ public class CategoryController {
             value = "/{id}"
     )
     public Category delete(@PathVariable("id") long id){
-        if (!exist(id))  throw new CategoryNotFoundException(id);
+        if (!exist(id)) {
+            throw new CategoryNotFoundException(id);
+        }
+
         Category category = repository.findById(id).get();
         category.setDeleted(true);
         return repository.save(category);
