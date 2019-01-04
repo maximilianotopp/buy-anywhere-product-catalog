@@ -48,14 +48,13 @@ public class CategoryController {
             value = "/{id}"
     )
     public Category delete(@PathVariable("id") long id){
-        if (!exist(id) || repository.findById(id).get().isDeleted())
-            throw new CategoryNotFoundException(id);
-        Category category = repository.getOne(id);
+        if (!exist(id))  throw new CategoryNotFoundException(id);
+        Category category = repository.findById(id).get();
         category.setDeleted(true);
         return repository.save(category);
     }
 
     private boolean exist (long id){
-        return repository.findById(id).isPresent();
+        return repository.findById(id).isPresent() && !repository.findById(id).get().isDeleted();
     }
 }
