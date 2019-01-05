@@ -1,5 +1,6 @@
 package com.buyanywhere.productcatalog.controllers.v1;
 
+import com.buyanywhere.productcatalog.exceptions.ArgumentNotValidException;
 import com.buyanywhere.productcatalog.exceptions.CategoryNotFoundException;
 import com.buyanywhere.productcatalog.models.Category;
 import com.buyanywhere.productcatalog.repositories.CategoryRepository;
@@ -12,10 +13,6 @@ public class CategoryController {
 
     public CategoryController(CategoryRepository repository) {
         this.repository = repository;
-    }
-
-    private boolean exist (long id){
-        return repository.findById(id).isPresent();
     }
 
     @RequestMapping(
@@ -36,5 +33,42 @@ public class CategoryController {
         return repository.save(data);
     }
 
+    @RequestMapping(
+            method = RequestMethod.PUT,
+            value = "/"
+    )
+    public Category put(@RequestBody Category data){
+        if (!exist(data.getId())) {
+            throw new CategoryNotFoundException(data.getId());
+        }
 
+        if(data.getName().isEmpty()) {
+            throw new ArgumentNotValidException("name");
+        }
+
+        if(data.getDisplayOrder() < 0) {
+            throw new ArgumentNotValidException("displayOrder");
+        }
+
+        data.setName(data.getName().trim());
+        return repository.save(data);
+    }
+
+    @RequestMapping(
+            method = RequestMethod.DELETE,
+            value = "/{id}"
+    )
+    public Category delete(@PathVariable("id") long id){
+        if (!exist(id)) {
+            throw new CategoryNotFoundException(id);
+        }
+
+        Category category = repository.findById(id).get();
+        category.setDeleted(true);
+        return repository.save(category);
+    }
+
+    private boolean exist (long id){
+        return repository.findById(id).isPresent() && !repository.findById(id).get().isDeleted();
+    }
 }

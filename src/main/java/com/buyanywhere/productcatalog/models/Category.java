@@ -17,7 +17,7 @@ public class Category {
     @Column(nullable = false)
     private boolean deleted;
 
-    public Category (){
+    public Category(){
     }
 
     public Category (long id, String name, int displayOrder){
