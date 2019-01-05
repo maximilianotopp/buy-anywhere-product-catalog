@@ -20,9 +20,11 @@ public class CategoryController {
             value="/{id}"
     )
     public Category get(@PathVariable("id") long id) {
-        if (!exist(id) || repository.findById(id).get().isDeleted())
+        if (!exist(id)){
             throw new CategoryNotFoundException(id);
-        return repository.getOne(id);
+        }
+
+        return repository.findById(id).get();
     }
 
     @RequestMapping(
