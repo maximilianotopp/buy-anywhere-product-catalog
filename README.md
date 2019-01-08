@@ -4,7 +4,7 @@ This is the Microservices that allows to create the catalog of products
 In order to work with this project you should start by having a "buy-anywhere" folder in your system (preferable in c:\buy-anywhere), inside you can execute:
 <br>
 <br>
-`git clone https://github.com/maximilianotopp/buy-anywhere-frontend-users.git`
+`git clone https://github.com/maximilianotopp/buy-anywhere-product-catalog.git`
 <br>
 <br>
 You need the following software in order to edit and run the project:
