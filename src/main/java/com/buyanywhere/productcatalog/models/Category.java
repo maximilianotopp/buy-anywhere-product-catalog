@@ -1,5 +1,7 @@
 package com.buyanywhere.productcatalog.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -15,6 +17,7 @@ public class Category {
     private int displayOrder;
 
     @Column(nullable = false)
+    @JsonIgnore
     private boolean deleted;
 
     public Category(){
