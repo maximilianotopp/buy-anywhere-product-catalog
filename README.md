@@ -33,4 +33,3 @@ This project was built using [Spring Boot](http://spring.io) using Maven
  When you create an endpoint you must respect REST conventions. This means that, if you have an endpoint that manages the CRUD of a Car class then the controller name will be CarController (singular). If you need an enpoint that returns all cars then the Endpoint will be CarsController.
  <br><br>
  The example controller (`GreetingController`) was made with this conventions in mind.
-
