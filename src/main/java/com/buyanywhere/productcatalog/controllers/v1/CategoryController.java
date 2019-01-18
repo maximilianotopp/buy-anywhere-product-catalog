@@ -14,7 +14,6 @@ public class CategoryController{
 
     public CategoryController(CategoryRepository repository){
         this.repository = repository;
-
     }
 
     @RequestMapping(
