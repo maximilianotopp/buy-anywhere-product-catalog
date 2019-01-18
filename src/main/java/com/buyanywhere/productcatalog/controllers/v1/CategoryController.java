@@ -1,5 +1,6 @@
 package com.buyanywhere.productcatalog.controllers.v1;
 
+import com.buyanywhere.productcatalog.exceptions.CategoryNotFoundException;
 import com.buyanywhere.productcatalog.models.Category;
 import com.buyanywhere.productcatalog.repositories.CategoryRepository;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,14 @@ public class CategoryController{
 
     public CategoryController(CategoryRepository repository){
         this.repository = repository;
+    }
+
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/{id}"
+    )
+    public Category get(@PathVariable int id){
+        return repository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
     }
 
     @RequestMapping(
