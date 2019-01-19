@@ -22,17 +22,15 @@ public class CategoriesController {
     @RequestMapping(
             method = RequestMethod.GET
     )
-    public List<Category> get(@RequestParam(value = "search") String search){
-      /*  CategorySpecificationsBuilder builder = new CategorySpecificationsBuilder();
-        Pattern pattern = Pattern.compile("(\\w+?)(:)(\\w+?),");
-        Matcher matcher = pattern.matcher(search + ",");
-        while (matcher.find()) {
-            builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
-        }
+    public List<Category> get(@RequestParam(value = "filterBy") String filterBy,
+                              @RequestParam(value = "showDeleted", defaultValue = "false") boolean showDeleted){
 
-        Specification<Category> spec = builder.build();*/
+        Specification<Category> spec = Specification.where((root, criteriaQuery, criteriaBuilder) -> {
+            return criteriaBuilder.like(
+                    root.<String>get("name"), "%" + filterBy + "%");
+        }).and((root, criteriaQuery, criteriaBuilder) -> {
 
-        //return repository.findAll(spec);
-        return null;
+        });
+        return repository.findAll();
     }
 }
