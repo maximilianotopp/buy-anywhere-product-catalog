@@ -22,21 +22,17 @@ public class CategorySpecificationsBuilder {
         if (parameters.size() == 0) {
             return null;
         }
-        /*List<Specification> specs = parameters.stream()
+
+        List<Specification> specs = parameters.stream()
                 .map(CategorySpecification::new)
                 .collect(Collectors.toList());
 
         Specification result = specs.get(0);
 
         for (int i = 1; i < parameters.size(); i++) {
-            result = parameters.get(i)
-                    .isOrPredicate()
-                    ? Specification.where(result)
-                    .or(specs.get(i))
-                    : Specification.where(result)
-                    .and(specs.get(i));
+            result = Specification.where(result).and(specs.get(i));
         }
-        return result;*/
-        return null;
+
+        return result;
     }
 }

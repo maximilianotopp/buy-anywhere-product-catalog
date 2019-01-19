@@ -20,18 +20,19 @@ public class CategoriesController {
     }
 
     @RequestMapping(
-            method = RequestMethod.GET,
-            value = "/"
+            method = RequestMethod.GET
     )
     public List<Category> get(@RequestParam(value = "search") String search){
-        CategorySpecificationsBuilder builder = new CategorySpecificationsBuilder();
+      /*  CategorySpecificationsBuilder builder = new CategorySpecificationsBuilder();
         Pattern pattern = Pattern.compile("(\\w+?)(:)(\\w+?),");
         Matcher matcher = pattern.matcher(search + ",");
         while (matcher.find()) {
             builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
         }
 
-        Specification<Category> spec = builder.build();
-        return repository.findAll(spec);
+        Specification<Category> spec = builder.build();*/
+
+        //return repository.findAll(spec);
+        return null;
     }
 }

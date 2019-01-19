@@ -11,6 +11,15 @@ import javax.persistence.criteria.Root;
 public class CategorySpecification implements Specification<Category> {
     private SearchCriteria criteria;
 
+    public CategorySpecification(SearchCriteria criteria){
+        super();
+        this.criteria = criteria;
+    }
+
+    public CategorySpecification(){
+
+    }
+
     @Override
     public Predicate toPredicate (Root<Category> root, CriteriaQuery<?> query, CriteriaBuilder builder){
         if (criteria.getOperation().equalsIgnoreCase(":")) {
