@@ -26,34 +26,29 @@ public class CategoriesController {
                               @RequestParam(value = "orderBy", defaultValue = "alpha") String orderBy,
                               @RequestParam(value = "reverse", defaultValue = "false") boolean reverse){
 
-        Specification<Category> spec;
-
         if(!(orderBy.equals("alpha") || orderBy.equals("order"))) {
             throw new ArgumentNotValidException("orderBy");
         }
 
-        if (filterBy.length() > 3){
-            spec = Specification.where((root, criteriaQuery, criteriaBuilder) -> {
+        Specification<Category> spec = Specification.where(null);
+
+        if (filterBy.length() > 3) {
+            spec = spec.and((root, criteriaQuery, criteriaBuilder) -> {
                 return criteriaBuilder.like(
                         root.<String>get("name"), "%" + filterBy + "%");
-            });
-        } else {
-            spec = Specification.where((root, criteriaQuery, criteriaBuilder) -> {
-                return criteriaBuilder.like(
-                        root.<String>get("name"), "%");
             });
         }
 
         if (!showDeleted) {
-            spec = Specification.where(spec).and((root, criteriaQuery, criteriaBuilder) -> {
+            spec = spec.and((root, criteriaQuery, criteriaBuilder) -> {
                 return criteriaBuilder.equal(
                         root.<String>get("deleted"), 0);
             });
         }
 
         List<Category> searchResults = repository.findAll(spec);
-
         Comparator<Category> categoryComparator;
+
         if(orderBy.equals("order")){
             categoryComparator = Comparator.comparing(Category::getDisplayOrder);
         } else {
