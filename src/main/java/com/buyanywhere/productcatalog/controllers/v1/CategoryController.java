@@ -38,6 +38,19 @@ public class CategoryController{
     }
 
     @RequestMapping(
+            method = RequestMethod.PUT,
+            value = "/"
+    )
+    public Category put(@RequestBody Category category){
+        int id = category.getId();
+        if(!exists(id)){
+            throw new CategoryNotFoundException(id);
+        }
+
+        return repository.save(category);
+    }
+
+    @RequestMapping(
             method = RequestMethod.DELETE,
             value = "/{id}"
     )

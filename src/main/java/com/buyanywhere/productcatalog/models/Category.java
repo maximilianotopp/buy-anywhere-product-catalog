@@ -15,7 +15,7 @@ public class Category{
     private int id;
     private String name;
     private int displayOrder;
-    @JsonsIgnore
+    @JsonIgnore
     private boolean deleted;
 
     public Category(){
