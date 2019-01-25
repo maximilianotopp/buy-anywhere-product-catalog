@@ -1,5 +1,7 @@
 package com.buyanywhere.productcatalog.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,6 +15,7 @@ public class Category{
     private int id;
     private String name;
     private int displayOrder;
+    @JsonIgnore
     private boolean deleted;
 
     public Category(){
