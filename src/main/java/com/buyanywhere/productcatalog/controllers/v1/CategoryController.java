@@ -22,7 +22,11 @@ public class CategoryController{
             value = "/{id}"
     )
     public Category get(@PathVariable int id){
-        return repository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
+        if(!exists(id)) {
+            throw new CategoryNotFoundException(id);
+        }
+
+        return repository.findById(id).get();
     }
 
     @RequestMapping(
@@ -38,10 +42,16 @@ public class CategoryController{
             value = "/{id}"
     )
     public Category delete(@PathVariable int id){
-        Category category = repository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
+        if(!exists(id)) {
+            throw new CategoryNotFoundException(id);
+        }
+
+        Category category = repository.findById(id).get();
         category.setDeleted(true);
-        repository.save(category);
-        return category;
+        return repository.save(category);
     }
 
+    private boolean exists(int id){
+        return repository.findById(id).isPresent() && !repository.findById(id).get().isDeleted();
+    }
 }
