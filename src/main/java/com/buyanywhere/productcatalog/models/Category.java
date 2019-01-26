@@ -44,7 +44,7 @@ public class Category {
         this.displayOrder = displayOrder;
     }
 
-    public boolean getDeleted(){
+    public boolean isDeleted(){
         return this.deleted;
     }
 

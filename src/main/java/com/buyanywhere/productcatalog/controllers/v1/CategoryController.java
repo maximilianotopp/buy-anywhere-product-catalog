@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 public class CategoryController{
     private CategoryRepository repository;
 
+
     public CategoryController(CategoryRepository repository) {
         this.repository = repository;
     }
@@ -18,7 +19,11 @@ public class CategoryController{
             value = "/{id}"
     )
     public Category get(@PathVariable int id){
-        return repository.findById(id).orElseThrow(() ->new CategoryNotFoundException(id));
+        if (!exist(id)){
+            throw new CategoryNotFoundException(id);
+        }
+
+        return repository.findById(id).get();
     }
 
     @RequestMapping(
@@ -27,5 +32,9 @@ public class CategoryController{
     )
     public Category post(@RequestBody Category categoryData){
         return repository.save(categoryData);
+    }
+
+    private boolean exist (int id) {
+        return repository.findById(id).isPresent() && !repository.findById(id).get().isDeleted();
     }
 }
