@@ -14,7 +14,7 @@ public class Greeting {
     }
 
     public long getId(){
-        return this.id;
+    return this.id;
     }
 
     public String getContent() {
