@@ -30,19 +30,23 @@ public class CategoriesController {
             throw new ArgumentNotValidException("orderBy");
         }
 
-        Specification<Category> spec = Specification.where(null);
+        Specification<Category> spec;
+        if (showDeleted) {
+            spec = Specification.where((root, criteriaQuery, criteriaBuilder) -> {
+                return criteriaBuilder.equal(
+                        root.<String>get("deleted"), 1);
+            });
+        }  else {
+            spec = Specification.where((root, criteriaQuery, criteriaBuilder) -> {
+                        return criteriaBuilder.equal(
+                                root.<String>get("deleted"), 0);
+            });
+        }
 
         if (filterBy.length() > 3) {
             spec = spec.and((root, criteriaQuery, criteriaBuilder) -> {
                 return criteriaBuilder.like(
                         root.<String>get("name"), "%" + filterBy + "%");
-            });
-        }
-
-        if (!showDeleted) {
-            spec = spec.and((root, criteriaQuery, criteriaBuilder) -> {
-                return criteriaBuilder.equal(
-                        root.<String>get("deleted"), 0);
             });
         }
 
