@@ -38,4 +38,8 @@ public class Category {
     public boolean isDeleted() {
         return deleted;
     }
+
+    public void Delete(){
+        deleted = true;
+    }
 }
