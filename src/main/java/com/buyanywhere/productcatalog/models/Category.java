@@ -1,7 +1,6 @@
 package com.buyanywhere.productcatalog.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 
 @Entity

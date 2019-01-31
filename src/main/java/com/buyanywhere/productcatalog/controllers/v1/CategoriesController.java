@@ -1,70 +1,62 @@
 package com.buyanywhere.productcatalog.controllers.v1;
 
-import com.buyanywhere.productcatalog.exceptions.ArgumentNotValidException;
+import com.buyanywhere.productcatalog.enums.OrderByEnum;
 import com.buyanywhere.productcatalog.models.Category;
 import com.buyanywhere.productcatalog.repositories.CategoryRepository;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.web.bind.annotation.*;
-import java.util.*;
-
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Path;
 
 @RestController
 @RequestMapping("/v1/categories")
 public class CategoriesController {
     private CategoryRepository repository;
 
-
     public CategoriesController(CategoryRepository repository) {
         this.repository = repository;
     }
 
-    @RequestMapping(
-            method = RequestMethod.GET
-    )
-    public List<Category> get(@RequestParam(value = "filterBy") String filterBy,
-                              @RequestParam(value = "showDeleted", defaultValue = "false") boolean showDeleted,
-                              @RequestParam(value = "orderBy", defaultValue = "alpha") String orderBy,
-                              @RequestParam(value = "reverse", defaultValue = "false") boolean reverse){
+    @RequestMapping(method = RequestMethod.GET, value = "/")
+    public Iterable<Category> get(
+            @RequestParam(value = "filterBy", required = false) String filterBy,
+            @RequestParam(value = "showDeleted", required = false, defaultValue = "false") boolean showDeleted,
+            @RequestParam(value = "orderBy", required = false, defaultValue = "alpha") OrderByEnum orderBy,
+            @RequestParam(value = "reverse", required = false, defaultValue = "false") boolean reverseOrder) {
 
-        if(!(orderBy.equals("alpha") || orderBy.equals("order"))) {
-            throw new ArgumentNotValidException("orderBy");
+        Specification<Category> specification = Specification
+                .where(
+                        getPredicateDeletedAndSorted(showDeleted, orderBy, reverseOrder)
+                );
+
+        if(filterBy.length() > 3){
+            specification = specification.and(
+                    (root, criteriaQuery, criteriaBuilder) ->
+                            criteriaBuilder.like(root.get("name"), "%" + filterBy + "%"));
         }
 
-        Specification<Category> spec;
-        if (showDeleted) {
-            spec = Specification.where((root, criteriaQuery, criteriaBuilder) -> {
-                return criteriaBuilder.equal(
-                        root.<String>get("deleted"), 1);
-            });
-        }  else {
-            spec = Specification.where((root, criteriaQuery, criteriaBuilder) -> {
-                        return criteriaBuilder.equal(
-                                root.<String>get("deleted"), 0);
-            });
-        }
+        return repository.findAll(specification);
+    }
 
-        if (filterBy.length() > 3) {
-            spec = spec.and((root, criteriaQuery, criteriaBuilder) -> {
-                return criteriaBuilder.like(
-                        root.<String>get("name"), "%" + filterBy + "%");
-            });
-        }
+    private Specification<Category> getPredicateDeletedAndSorted(boolean showDeleted,
+                                                                 OrderByEnum orderBy,
+                                                                 boolean reverseOrder) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
 
-        List<Category> searchResults = repository.findAll(spec);
-        Comparator<Category> categoryComparator;
+            Path<Category> orderByPath = orderBy == OrderByEnum.alpha
+                    ? root.get("name")
+                    : root.get("displayOrder");
 
-        if(orderBy.equals("order")){
-            categoryComparator = Comparator.comparing(Category::getDisplayOrder);
-        } else {
-            categoryComparator = Comparator.comparing(Category::getName);
-        }
+            Order order = !reverseOrder
+                    ? criteriaBuilder.asc(orderByPath)
+                    : criteriaBuilder.desc(orderByPath);
 
-        if(reverse){
-            Collections.sort(searchResults, categoryComparator.reversed());
-        } else {
-            Collections.sort(searchResults, categoryComparator);
-        }
+            criteriaQuery.orderBy(order);
 
-        return searchResults;
+            return criteriaBuilder.equal(root.<String>get("deleted"), showDeleted ? 1 : 0);
+        };
     }
 }
