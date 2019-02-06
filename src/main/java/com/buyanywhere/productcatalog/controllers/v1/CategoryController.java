@@ -21,7 +21,7 @@ public class CategoryController {
             throw new CategoryNotFoundException(id);
         }
 
-        return repository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
+        return repository.findById(id).get();
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/")
