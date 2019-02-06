@@ -2,7 +2,6 @@ package com.buyanywhere.productcatalog.controllers.v1;
 
 import com.buyanywhere.productcatalog.models.Greeting;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController

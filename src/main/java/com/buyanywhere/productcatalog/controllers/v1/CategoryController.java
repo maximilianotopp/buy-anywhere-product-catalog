@@ -4,7 +4,6 @@ import com.buyanywhere.productcatalog.exceptions.CategoryNotFoundException;
 import com.buyanywhere.productcatalog.models.Category;
 import com.buyanywhere.productcatalog.repositories.CategoryRepository;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Optional;
 
 @RestController
