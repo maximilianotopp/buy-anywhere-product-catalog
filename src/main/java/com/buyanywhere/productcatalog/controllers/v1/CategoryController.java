@@ -1,6 +1,7 @@
 package com.buyanywhere.productcatalog.controllers.v1;
 
 import com.buyanywhere.productcatalog.exceptions.CategoryNotFoundException;
+import com.buyanywhere.productcatalog.exceptions.CategoryNotValidException;
 import com.buyanywhere.productcatalog.models.Category;
 import com.buyanywhere.productcatalog.repositories.CategoryRepository;
 import org.springframework.web.bind.annotation.*;
@@ -26,11 +27,19 @@ public class CategoryController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/")
     public Category post(@RequestBody Category data){
+        if(!data.isValid()){
+            throw new CategoryNotValidException();
+        }
+
         return repository.save(data);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/")
     public Category put(@RequestBody Category category){
+        if(!category.isValid()){
+            throw new CategoryNotValidException();
+        }
+
         if(!exists(category.getId())){
             throw new CategoryNotFoundException(category.getId());
         }
