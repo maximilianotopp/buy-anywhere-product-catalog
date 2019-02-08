@@ -1,7 +1,15 @@
 package com.buyanywhere.productcatalog.models;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Category {
-	private long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private int id;
 	private String name;
 	private int displayOrder;
 	private boolean deleted;
@@ -9,20 +17,14 @@ public class Category {
 	public Category() {
 	}
 
-	public Category(long id, String name, int displayOrder, boolean deleted) {
-		super();
-		this.id = id;
+	public Category(String name, int displayOrder, boolean deleted) {
 		this.name = name;
 		this.displayOrder = displayOrder;
 		this.deleted = deleted;
 	}
 
-	public long getId() {
+	public int getId() {
 		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	public String getName() {
@@ -48,6 +50,4 @@ public class Category {
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
-
 }
