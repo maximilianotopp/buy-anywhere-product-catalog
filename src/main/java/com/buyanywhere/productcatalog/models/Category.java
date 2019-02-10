@@ -44,7 +44,6 @@ public class Category {
         deleted = true;
     }
 
-    @JsonIgnore
     public boolean isValid(){
         return !(name.trim().isEmpty() || displayOrder < 0);
     }
