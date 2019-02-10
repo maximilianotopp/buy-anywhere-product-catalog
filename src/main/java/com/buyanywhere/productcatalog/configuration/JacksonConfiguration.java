@@ -1,4 +1,4 @@
-package com.buyanywhere.productcatalog.Configuration;
+package com.buyanywhere.productcatalog.configuration;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
