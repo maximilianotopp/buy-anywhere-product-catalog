@@ -28,7 +28,7 @@ public class CategoryController {
     @RequestMapping(method = RequestMethod.POST, value = "/")
     public Category post(@RequestBody Category data){
         if(!data.isValid()){
-            throw new CategoryNotValidException();
+            throw new CategoryNotValidException(data.invalidValue());
         }
 
         return repository.save(data);
@@ -37,7 +37,7 @@ public class CategoryController {
     @RequestMapping(method = RequestMethod.PUT, value = "/")
     public Category put(@RequestBody Category category){
         if(!category.isValid()){
-            throw new CategoryNotValidException();
+            throw new CategoryNotValidException(category.invalidValue());
         }
 
         if(!exists(category.getId())){
@@ -54,7 +54,7 @@ public class CategoryController {
         }
 
         Category category = repository.findById(id).get();
-        category.Delete();
+        category.delete();
 
         repository.save(category);
     }

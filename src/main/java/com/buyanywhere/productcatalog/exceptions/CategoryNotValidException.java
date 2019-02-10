@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value= HttpStatus.BAD_REQUEST)
 public class CategoryNotValidException extends RuntimeException{
-    public CategoryNotValidException(){
-        super("The arguments passed are not valid.");
+    public CategoryNotValidException(String invalidAttribute){
+        super("The Category has the following invalid value(s): " + invalidAttribute);
     }
 }

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Category {
@@ -40,11 +42,24 @@ public class Category {
         return deleted;
     }
 
-    public void Delete(){
+    public void delete(){
         deleted = true;
     }
 
     public boolean isValid(){
         return !(name.trim().isEmpty() || displayOrder < 0);
+    }
+
+    public String invalidValue(){
+        List<String> attributes = new ArrayList<>();
+        if (name.trim().isEmpty()){
+            attributes.add("name");
+        }
+
+        if (displayOrder < 0){
+            attributes.add("displayOrder");
+        }
+
+        return String.join(", ", attributes);
     }
 }
