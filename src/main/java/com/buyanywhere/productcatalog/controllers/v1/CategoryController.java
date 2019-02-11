@@ -24,8 +24,7 @@ public class CategoryController {
     @RequestMapping(method = RequestMethod.GET, value = "/get/{id}")
     @ResponseBody
     public Category get(@PathVariable("id") long id) throws CategoryNotFoundException {
-
-        if ((repository.findById(id).get().isDeleted() == false) && (repository.existsById(id))) {
+        if (repository.findById(id).isPresent() && !repository.findById(id).get().isDeleted()) {
             return repository.findById(id).get();
         } else {
             throw new CategoryNotFoundException("No category with Id: <" + Long.toString(id) + ">");
