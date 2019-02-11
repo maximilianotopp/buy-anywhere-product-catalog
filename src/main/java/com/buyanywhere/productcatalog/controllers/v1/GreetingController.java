@@ -14,6 +14,7 @@ public class GreetingController {
     @RequestMapping(
             method = RequestMethod.GET,
             value = "/{name}"
+            //query string
     )
     public Greeting greeting(
             @RequestParam(value = "name", defaultValue = "World") String name) {
