@@ -17,7 +17,7 @@ public class CategoryController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-    public Category get(@PathVariable long id){
+    public Category get(@PathVariable long id) throws CategoryNotFoundException{
         if(!exists(id)){
             throw new CategoryNotFoundException(id);
         }
@@ -26,7 +26,7 @@ public class CategoryController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/")
-    public Category post(@RequestBody Category data){
+    public Category post(@RequestBody Category data) throws CategoryNotFoundException{
         if(!data.isValid()){
             throw new CategoryNotValidException(data.invalidValue());
         }
@@ -35,7 +35,7 @@ public class CategoryController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/")
-    public Category put(@RequestBody Category category){
+    public Category put(@RequestBody Category category) throws CategoryNotValidException, CategoryNotFoundException {
         if(!category.isValid()){
             throw new CategoryNotValidException(category.invalidValue());
         }
@@ -48,7 +48,7 @@ public class CategoryController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
-    public void delete(@PathVariable long id){
+    public void delete(@PathVariable long id) throws CategoryNotFoundException{
         if(!exists(id)){
             throw new CategoryNotFoundException(id);
         }
