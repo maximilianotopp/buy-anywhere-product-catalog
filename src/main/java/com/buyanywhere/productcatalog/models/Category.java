@@ -49,17 +49,4 @@ public class Category {
     public boolean isValid(){
         return !(name.trim().isEmpty() || displayOrder < 0);
     }
-
-    public String invalidValue(){
-        List<String> attributes = new ArrayList<>();
-        if (name.trim().isEmpty()){
-            attributes.add("name");
-        }
-
-        if (displayOrder < 0){
-            attributes.add("displayOrder");
-        }
-
-        return String.join(", ", attributes);
-    }
 }

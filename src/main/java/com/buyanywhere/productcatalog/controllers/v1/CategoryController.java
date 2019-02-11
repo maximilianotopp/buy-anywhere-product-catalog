@@ -26,18 +26,18 @@ public class CategoryController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/")
-    public Category post(@RequestBody Category data) throws CategoryNotFoundException{
-        if(!data.isValid()){
-            throw new CategoryNotValidException(data.invalidValue());
+    public Category post(@RequestBody Category category) throws CategoryNotValidException{
+        if(!category.isValid()){
+            throw new CategoryNotValidException(this.getInvalidFields(category));
         }
 
-        return repository.save(data);
+        return repository.save(category);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/")
     public Category put(@RequestBody Category category) throws CategoryNotValidException, CategoryNotFoundException {
         if(!category.isValid()){
-            throw new CategoryNotValidException(category.invalidValue());
+            throw new CategoryNotValidException(this.getInvalidFields(category));
         }
 
         if(!exists(category.getId())){
@@ -63,5 +63,20 @@ public class CategoryController {
         Optional<Category> categoryOptional = repository.findById(id);
 
         return categoryOptional.isPresent() && !categoryOptional.get().isDeleted();
+    }
+
+    private String getInvalidFields(Category category){
+        String invalidFields = new String();
+        if(category.getName().trim().isEmpty()){
+            invalidFields = "name";
+        }
+
+        if(category.getDisplayOrder() < 0){
+            invalidFields = invalidFields.trim().isEmpty()
+                    ? "displayOrder"
+                    : invalidFields + ", displayOrder";
+        }
+
+        return invalidFields;
     }
 }
