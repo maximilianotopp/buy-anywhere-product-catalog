@@ -16,18 +16,16 @@ public class CategoryController {
         this.repository = repository;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/create-new")
+    @RequestMapping(method = RequestMethod.POST, value = "/")
     public Category post(@RequestBody Category category) {
         return repository.save(category);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/get/{id}")
-    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public Category get(@PathVariable("id") long id) throws CategoryNotFoundException {
-        if (repository.findById(id).isPresent() && !repository.findById(id).get().isDeleted()) {
-            return repository.findById(id).get();
-        } else {
-            throw new CategoryNotFoundException("No category with Id: <" + Long.toString(id) + ">");
+        if (!repository.findById(id).isPresent() || repository.findById(id).get().isDeleted()) {
+            throw new CategoryNotFoundException(id);
         }
+        return repository.findById(id).get();
     }
 }

@@ -3,7 +3,7 @@ package com.buyanywhere.productcatalog.models;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Transient;
+
 
 @Entity
 public class Category {
@@ -31,7 +31,6 @@ public class Category {
         return name;
     }
 
-    @Transient
     public void setName(String name) {
         this.name = name;
     }

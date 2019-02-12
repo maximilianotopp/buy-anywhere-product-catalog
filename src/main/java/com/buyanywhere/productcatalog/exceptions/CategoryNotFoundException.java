@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 public class CategoryNotFoundException extends RuntimeException {
 
-    public CategoryNotFoundException(String message) {
-        super(message);
+    public CategoryNotFoundException(long id) {
+        super("Could not find Category with id: " + id);
     }
 }
