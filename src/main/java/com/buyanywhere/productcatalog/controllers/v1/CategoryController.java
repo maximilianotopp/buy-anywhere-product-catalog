@@ -37,4 +37,10 @@ public class CategoryController {
         return repository.save(category);
     }
 
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    public Category delete(@RequestBody Category category, @PathVariable("id") long id) throws CategoryNotFoundException {
+        category = this.get(id);
+        category.setDeleted(true);
+        return repository.save(category);
+    }
 }
