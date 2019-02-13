@@ -17,10 +17,9 @@ public class CategoryController{
         this.repository = repository;
     }
 
-    @RequestMapping{
+    @RequestMapping(
         method = RequestMethod.POST,
-        value = "/";
-    }
-
+        value = "/"
+    )
     public Category post(@RequestBody Category category) {return repository.save(category);}
 }

@@ -1,56 +1,39 @@
 package com.buyanywhere.productcatalog.models;
 
-import org.springframework.data.annotation.*;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 @Entity
 public class Category{
 
     @Id
     @GeneratedValue
-    private long Id;
-    private String Name;
-    private int DisplayOrder;
-    private boolean Deleted = false;
+    private long id;
+    private String name;
+    private int displayOrder;
+    private boolean deleted;
 
-    public Category(String name,int displayOrder, boolean deleted){
-
-        this.setName(name);
-        this.setDisplayOrder(displayOrder);
-        this.setDeleted(deleted);
+    public Category(String name, int displayOrder, boolean deleted) {
+        this.name = name;
+        this.displayOrder = displayOrder;
+        this.deleted = deleted;
     }
-
 
     public long getId() {
-        return Id;
-    }
-
-    public void setId(long id) {
-        Id = id;
+        return id;
     }
 
     public String getName() {
-        return Name;
-    }
-
-    public void setName(String name) {
-        Name = name;
+        return name;
     }
 
     public int getDisplayOrder() {
-        return DisplayOrder;
-    }
-
-    public void setDisplayOrder(int displayOrder) {
-        DisplayOrder = displayOrder;
+        return displayOrder;
     }
 
     public boolean isDeleted() {
-        return Deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        Deleted = deleted;
+        return deleted;
     }
 }
