@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-
 @RestController
 @RequestMapping("/v1/category")
 public class CategoryController{
@@ -21,5 +20,7 @@ public class CategoryController{
         method = RequestMethod.POST,
         value = "/"
     )
-    public Category post(@RequestBody Category category) {return repository.save(category);}
+    public Category post(@RequestBody Category category) {
+        return repository.save(category);
+    }
 }
