@@ -4,7 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-
 @Entity
 public class Category {
     @Id
@@ -49,5 +48,12 @@ public class Category {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public boolean isValid() {
+        if ((this.name == "") || (this.displayOrder < 0)) {
+            return false;
+        }
+        return true;
     }
 }
