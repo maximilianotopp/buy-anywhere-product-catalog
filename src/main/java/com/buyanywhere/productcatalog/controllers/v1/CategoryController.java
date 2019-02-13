@@ -2,10 +2,7 @@ package com.buyanywhere.productcatalog.controllers.v1;
 
 import com.buyanywhere.productcatalog.models.Category;
 import com.buyanywhere.productcatalog.repositories.CategoryRepository;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -21,5 +18,16 @@ public class CategoryController{
         method = RequestMethod.POST,
         value = "/"
     )
-    public Category post(@RequestBody Category category) {return repository.save(category);}
+    public Category post(@RequestBody Category category){
+        return repository.save(category);
+    }
+
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/{id}"
+    )
+    public Category getById(@PathVariable long id){
+
+        return repository.findById(id).get();
+    }
 }
