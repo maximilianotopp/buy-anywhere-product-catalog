@@ -50,10 +50,15 @@ public class Category {
         this.deleted = deleted;
     }
 
+    public String showInformation() {
+        return "Name: " + this.name + ", Order: " + Integer.toString(this.displayOrder);
+    }
+
     public boolean isValid() {
         if ((this.name == "") || (this.displayOrder < 0)) {
             return false;
         }
+
         return true;
     }
 }

@@ -22,6 +22,7 @@ public class CategoryController {
         if (!repository.findById(id).isPresent() || repository.findById(id).get().isDeleted()) {
             throw new CategoryNotFoundException(id);
         }
+
         return repository.findById(id).get();
     }
 
@@ -31,10 +32,11 @@ public class CategoryController {
     }
 
     @PutMapping
-    public Category put(@RequestBody Category category) throws CategoryNotFoundException {
+    public Category put(@RequestBody Category category) throws InvalidCategoryException {
         if (!category.isValid()) {
-            throw new InvalidCategoryException("Invalid data: Name: " + category.getName() + ", Order: " + category.getDisplayOrder());
+            throw new InvalidCategoryException(category.showInformation());
         }
+
         return repository.save(category);
     }
 }

@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 public class InvalidCategoryException extends RuntimeException {
 
-    public InvalidCategoryException(String message) {
-        super(message);
+    public InvalidCategoryException(String information) {
+        super("Invalid data: " + information);
     }
 }
 
