@@ -19,7 +19,7 @@ public class CategoryController {
 
     @GetMapping(value = "/{id}")
     public Category get(@PathVariable("id") long id) throws CategoryNotFoundException {
-        if (!repository.findById(id).isPresent() || repository.findById(id).get().isDeleted()) {
+        if (!exist(id)) {
             throw new CategoryNotFoundException(id);
         }
 
@@ -32,11 +32,19 @@ public class CategoryController {
     }
 
     @PutMapping
-    public Category put(@RequestBody Category category) throws InvalidCategoryException {
+    public Category put(@RequestBody Category category) throws InvalidCategoryException, CategoryNotFoundException {
         if (!category.isValid()) {
             throw new InvalidCategoryException(category.showInformation());
         }
 
+        if(!exist(category.getId())){
+            throw new CategoryNotFoundException(category.getId());
+        }
+
         return repository.save(category);
+    }
+
+    private boolean exist(long id){
+       return (repository.findById(id).isPresent() && !repository.findById(id).get().isDeleted());
     }
 }
