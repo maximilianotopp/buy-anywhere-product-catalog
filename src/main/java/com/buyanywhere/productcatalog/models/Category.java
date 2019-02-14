@@ -61,4 +61,8 @@ public class Category {
 
         return true;
     }
+
+    public void delete(){
+	    this.deleted = true;
+    }
 }

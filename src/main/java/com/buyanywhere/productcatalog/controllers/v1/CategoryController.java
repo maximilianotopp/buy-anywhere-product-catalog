@@ -37,14 +37,25 @@ public class CategoryController {
             throw new InvalidCategoryException(category.showInformation());
         }
 
-        if(!exist(category.getId())){
+        if (!exist(category.getId())) {
             throw new CategoryNotFoundException(category.getId());
         }
 
         return repository.save(category);
     }
 
-    private boolean exist(long id){
-       return (repository.findById(id).isPresent() && !repository.findById(id).get().isDeleted());
+    @DeleteMapping(value = "/{id}")
+    public Category delete(@PathVariable long id) throws CategoryNotFoundException {
+        if (!exist(id)) {
+            throw new CategoryNotFoundException(id);
+        }
+
+        Category category = repository.findById(id).get();
+        category.delete();
+        return repository.save(category);
+    }
+
+    private boolean exist(long id) {
+        return (repository.findById(id).isPresent() && !repository.findById(id).get().isDeleted());
     }
 }
