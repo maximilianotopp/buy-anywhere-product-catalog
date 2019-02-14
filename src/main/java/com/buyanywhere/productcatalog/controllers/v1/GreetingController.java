@@ -34,7 +34,7 @@ public class GreetingController {
             method = RequestMethod.POST,
             value = "/"
     )
-    public Greeting greeting(@RequestBody Greeting greetingData){
+    public Greeting greeting(@RequestBody Greeting greetingData) {
         return greetingData;
     }
 }
