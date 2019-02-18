@@ -16,8 +16,10 @@ services:
       MYSQL_USER: admin
       MYSQL_PASSWORD: admin
     volumes:
-      - ./data:/docker-entrypoint-initdb.d
+      - my-datavolume:/var/lib/mysql
 
+volumes:
+  my-datavolume:
 
 #  product-catalog:
 #    container_name: repo-product-catalog
