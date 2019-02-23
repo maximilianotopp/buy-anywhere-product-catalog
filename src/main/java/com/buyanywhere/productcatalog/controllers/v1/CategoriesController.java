@@ -3,23 +3,22 @@ package com.buyanywhere.productcatalog.controllers.v1;
 import com.buyanywhere.productcatalog.enums.OrderByEnum;
 import com.buyanywhere.productcatalog.models.Category;
 import com.buyanywhere.productcatalog.repositories.CategoryRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import javax.persistence.criteria.*;
 
 @RestController
 @RequestMapping("/v1/categories")
-public class CategoriesController {
+public class CategoriesController extends BaseController {
     private CategoryRepository repository;
 
-    public CategoriesController(CategoryRepository repository) {
+    public CategoriesController(CategoryRepository repository, ModelMapper mapper) {
+        super(mapper);
         this.repository = repository;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public Iterable<Category> get(
             @RequestParam(value = "filterBy", required = false) String filterBy,
             @RequestParam(value = "showDeleted", required = false, defaultValue = "false") boolean showDeleted,
