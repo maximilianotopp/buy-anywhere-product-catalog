@@ -13,9 +13,11 @@ import java.util.Optional;
 @RequestMapping("/v1/category")
 public class CategoryController {
     private CategoryRepository repository;
+    private ModelMapper mapper;
 
-    public CategoryController(CategoryRepository repository) {
+    public CategoryController(CategoryRepository repository, ModelMapper mapper) {
         this.repository = repository;
+        this.mapper = mapper;
     }
 
     @GetMapping(value = "/{id}")
@@ -26,12 +28,9 @@ public class CategoryController {
 
         Category category = repository.findById(id).get();
 
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.createTypeMap(Category.class, CategoryDto.class);
-
         CategoryDto categoryDto = new CategoryDto();
 
-        modelMapper.map(category, categoryDto);
+        mapper.map(category, categoryDto);
 
         return category;
     }
