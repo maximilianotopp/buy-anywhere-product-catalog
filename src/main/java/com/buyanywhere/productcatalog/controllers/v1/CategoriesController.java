@@ -3,16 +3,18 @@ package com.buyanywhere.productcatalog.controllers.v1;
 import com.buyanywhere.productcatalog.enums.OrderByEnum;
 import com.buyanywhere.productcatalog.models.Category;
 import com.buyanywhere.productcatalog.repositories.CategoryRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.*;
 import javax.persistence.criteria.*;
 
 @RestController
 @RequestMapping("/v1/categories")
-public class CategoriesController {
+public class CategoriesController extends BaseController {
     private CategoryRepository repository;
 
-    public CategoriesController(CategoryRepository repository) {
+    public CategoriesController(CategoryRepository repository, ModelMapper mapper) {
+        super(mapper);
         this.repository = repository;
     }
 
