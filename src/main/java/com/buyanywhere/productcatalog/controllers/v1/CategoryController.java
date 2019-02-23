@@ -1,9 +1,11 @@
 package com.buyanywhere.productcatalog.controllers.v1;
 
+import com.buyanywhere.productcatalog.dto.CategoryDto;
 import com.buyanywhere.productcatalog.exceptions.CategoryNotFoundException;
 import com.buyanywhere.productcatalog.exceptions.CategoryNotValidException;
 import com.buyanywhere.productcatalog.models.Category;
 import com.buyanywhere.productcatalog.repositories.CategoryRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
@@ -22,7 +24,16 @@ public class CategoryController {
             throw new CategoryNotFoundException(id);
         }
 
-        return repository.findById(id).get();
+        Category category = repository.findById(id).get();
+
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.createTypeMap(Category.class, CategoryDto.class);
+
+        CategoryDto categoryDto = new CategoryDto();
+
+        modelMapper.map(category, categoryDto);
+
+        return category;
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -54,6 +65,7 @@ public class CategoryController {
         }
 
         Category category = repository.findById(id).get();
+
         category.delete();
 
         repository.save(category);
