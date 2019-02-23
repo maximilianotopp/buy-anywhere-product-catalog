@@ -11,13 +11,12 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/v1/category")
-public class CategoryController {
+public class CategoryController extends BaseController {
     private CategoryRepository repository;
-    private ModelMapper mapper;
 
     public CategoryController(CategoryRepository repository, ModelMapper mapper) {
+        super(mapper);
         this.repository = repository;
-        this.mapper = mapper;
     }
 
     @GetMapping(value = "/{id}")
