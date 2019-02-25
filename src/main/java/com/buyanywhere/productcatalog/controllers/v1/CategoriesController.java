@@ -1,5 +1,6 @@
 package com.buyanywhere.productcatalog.controllers.v1;
 
+import com.buyanywhere.productcatalog.dto.CategoryDto;
 import com.buyanywhere.productcatalog.enums.OrderByEnum;
 import com.buyanywhere.productcatalog.models.Category;
 import com.buyanywhere.productcatalog.repositories.CategoryRepository;
@@ -7,6 +8,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.*;
 import javax.persistence.criteria.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/categories")
@@ -19,7 +22,7 @@ public class CategoriesController extends BaseController {
     }
 
     @GetMapping
-    public Iterable<Category> get(
+    public List<CategoryDto> get(
             @RequestParam(value = "filterBy", required = false) String filterBy,
             @RequestParam(value = "showDeleted", required = false, defaultValue = "false") boolean showDeleted,
             @RequestParam(value = "orderBy", required = false, defaultValue = "alpha") OrderByEnum orderBy,
@@ -37,7 +40,11 @@ public class CategoriesController extends BaseController {
                             criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + filterBy + "%"));
         }
 
-        return repository.findAll(specification);
+        List<Category> categories = repository.findAll(specification);
+
+        return categories.stream()
+                .map(category -> mapper.map(category, CategoryDto.class))
+                .collect(Collectors.toList());
     }
 
     private Predicate getPredicateShowDeletedAndOrdered(boolean showDeleted, OrderByEnum orderBy, boolean reverseOrder,

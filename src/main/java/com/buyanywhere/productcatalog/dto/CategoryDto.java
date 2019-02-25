@@ -28,4 +28,8 @@ public class CategoryDto {
     public void setDisplayOrder(int displayOrder) {
         this.displayOrder = displayOrder;
     }
+
+    public boolean isValid(){
+        return !(name == null || name.trim().isEmpty() || displayOrder < 0);
+    }
 }
