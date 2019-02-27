@@ -38,6 +38,8 @@ public class CategoryController extends BaseController {
 
         Category category = mapper.map(categoryDto, Category.class);
 
+        category.setName(categoryDto.getName().trim());
+
         return mapper.map(repository.save(category), CategoryDto.class);
     }
 
@@ -54,7 +56,7 @@ public class CategoryController extends BaseController {
 
         Category category = repository.findById(id).get();
 
-        category.setName(categoryDto.getName());
+        category.setName(categoryDto.getName().trim());
         category.setDisplayOrder(categoryDto.getDisplayOrder());
 
         return mapper.map(repository.save(category), CategoryDto.class);
