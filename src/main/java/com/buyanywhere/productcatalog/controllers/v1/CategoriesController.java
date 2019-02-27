@@ -22,7 +22,7 @@ public class CategoriesController extends BaseController {
     }
 
     @GetMapping
-    public List<CategoryDto> get(
+    public Iterable<CategoryDto> get(
             @RequestParam(value = "filterBy", required = false) String filterBy,
             @RequestParam(value = "showDeleted", required = false, defaultValue = "false") boolean showDeleted,
             @RequestParam(value = "orderBy", required = false, defaultValue = "alpha") OrderByEnum orderBy,
