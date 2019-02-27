@@ -20,40 +20,46 @@ public class CategoryController extends BaseController {
     }
 
     @GetMapping(value = "/{id}")
-    public Category get(@PathVariable long id) throws CategoryNotFoundException{
+    public CategoryDto get(@PathVariable long id) throws CategoryNotFoundException{
         if(!exists(id)){
             throw new CategoryNotFoundException(id);
         }
 
         Category category = repository.findById(id).get();
 
-        CategoryDto categoryDto = new CategoryDto();
-
-        mapper.map(category, categoryDto);
-
-        return category;
+        return mapper.map(category, CategoryDto.class);
     }
 
     @PostMapping
-    public Category post(@RequestBody Category category) throws CategoryNotValidException{
-        if(!category.isValid()){
-            throw new CategoryNotValidException(this.getInvalidFields(category));
+    public CategoryDto post(@RequestBody CategoryDto categoryDto) throws CategoryNotValidException{
+        if(!categoryDto.isValid()){
+            throw new CategoryNotValidException(this.getInvalidFields(categoryDto));
         }
 
-        return repository.save(category);
+        Category category = mapper.map(categoryDto, Category.class);
+
+        category.setName(categoryDto.getName().trim());
+
+        return mapper.map(repository.save(category), CategoryDto.class);
     }
 
-    @PutMapping
-    public Category put(@RequestBody Category category) throws CategoryNotValidException, CategoryNotFoundException {
-        if(!category.isValid()){
-            throw new CategoryNotValidException(this.getInvalidFields(category));
+    @PutMapping(value = "/{id}")
+    public CategoryDto put(@PathVariable long id, @RequestBody CategoryDto categoryDto)
+            throws CategoryNotValidException, CategoryNotFoundException {
+        if(!exists(id)){
+            throw new CategoryNotFoundException(id);
         }
 
-        if(!exists(category.getId())){
-            throw new CategoryNotFoundException(category.getId());
+        if(!categoryDto.isValid()){
+            throw new CategoryNotValidException(this.getInvalidFields(categoryDto));
         }
 
-        return repository.save(category);
+        Category category = repository.findById(id).get();
+
+        category.setName(categoryDto.getName().trim());
+        category.setDisplayOrder(categoryDto.getDisplayOrder());
+
+        return mapper.map(repository.save(category), CategoryDto.class);
     }
 
     @DeleteMapping(value = "/{id}")
@@ -75,13 +81,16 @@ public class CategoryController extends BaseController {
         return categoryOptional.isPresent() && !categoryOptional.get().isDeleted();
     }
 
-    private String getInvalidFields(Category category){
+    private String getInvalidFields(CategoryDto categoryDto){
         String invalidFields = new String();
-        if(category.getName().trim().isEmpty()){
+
+        String name = categoryDto.getName();
+
+        if(name == null || name.trim().isEmpty()){
             invalidFields = "name";
         }
 
-        if(category.getDisplayOrder() < 0){
+        if(categoryDto.getDisplayOrder() < 0){
             invalidFields = invalidFields.trim().isEmpty()
                     ? "displayOrder"
                     : invalidFields + ", displayOrder";

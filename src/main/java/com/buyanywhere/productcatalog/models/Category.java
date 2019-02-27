@@ -1,6 +1,5 @@
 package com.buyanywhere.productcatalog.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -12,7 +11,6 @@ public class Category {
     private Long id;
     private String name;
     private int displayOrder;
-    @JsonIgnore
     private boolean deleted;
 
     public Category(String name, int displayOrder){
@@ -44,7 +42,11 @@ public class Category {
         deleted = true;
     }
 
-    public boolean isValid(){
-        return !(name.trim().isEmpty() || displayOrder < 0);
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDisplayOrder(int displayOrder) {
+        this.displayOrder = displayOrder;
     }
 }
