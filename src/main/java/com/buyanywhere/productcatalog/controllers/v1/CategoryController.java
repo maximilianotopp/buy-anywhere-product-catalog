@@ -7,8 +7,8 @@ import com.buyanywhere.productcatalog.exceptions.DuplicatedCategoryException;
 import com.buyanywhere.productcatalog.models.Category;
 import com.buyanywhere.productcatalog.repositories.CategoryRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -38,13 +38,13 @@ public class CategoryController extends BaseController {
             throw new CategoryNotValidException(this.getInvalidFields(categoryDto));
         }
 
-        Category category = mapper.map(categoryDto, Category.class);
-
         String categoryDtoName = categoryDto.getName().trim();
 
-        if(findByName(categoryDtoName).isPresent()){
+        if(!repository.findByNameAndDeletedFalse(categoryDtoName).isEmpty()) {
             throw new DuplicatedCategoryException(categoryDtoName);
         }
+
+        Category category = mapper.map(categoryDto, Category.class);
 
         category.setName(categoryDtoName);
 
@@ -64,15 +64,15 @@ public class CategoryController extends BaseController {
 
         String categoryDtoName = categoryDto.getName().trim();
 
-        Optional<Category> optionalCategory = findByName(categoryDtoName);
+        List<Category> matchingCategories = repository.findByNameAndDeletedFalse(categoryDtoName);
 
-        if(optionalCategory.isPresent() && optionalCategory.get().getId() != id){
+        if(!matchingCategories.isEmpty() && matchingCategories.get(0).getId() != id) {
             throw new DuplicatedCategoryException(categoryDtoName);
         }
 
-        Category category = optionalCategory.get();
+        Category category = repository.findById(id).get();
 
-        category.setName(categoryDto.getName().trim());
+        category.setName(categoryDtoName);
         category.setDisplayOrder(categoryDto.getDisplayOrder());
 
         return mapper.map(repository.save(category), CategoryDto.class);
@@ -89,17 +89,6 @@ public class CategoryController extends BaseController {
         category.delete();
 
         repository.save(category);
-    }
-
-    private Optional<Category> findByName(String name){
-        Specification<Category> specification = Specification
-                .where((root, criteriaQuery, criteriaBuilder) ->
-                        criteriaBuilder.equal(criteriaBuilder.lower(root.get("name")), name));
-
-        specification = specification.and((root, criteriaQuery, criteriaBuilder) ->
-                            criteriaBuilder.equal(root.<String>get("deleted"), 0));
-
-        return repository.findOne(specification);
     }
 
     private boolean exists(long id){
