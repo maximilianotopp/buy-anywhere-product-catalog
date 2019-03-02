@@ -8,7 +8,7 @@ import javax.persistence.Id;
 public class Category {
     @Id
     @GeneratedValue
-    private int id;
+    private long id;
     private String name;
     private int displayOrder;
     private boolean deleted;
@@ -22,7 +22,7 @@ public class Category {
     public Category() {
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
