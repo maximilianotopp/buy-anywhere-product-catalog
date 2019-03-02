@@ -30,4 +30,14 @@ public class CategoryController{
     public Category post(@RequestBody Category category){
         return repository.save(category);
     }
+
+    @DeleteMapping(value = "/{id}")
+    public Category delete(@PathVariable Long id) {
+        if(!repository.findById(id).isPresent() || repository.findById(id).get().isDeleted()){
+            throw new CategoryNotFoundException(id);
+        }
+        Category category = repository.findById(id).get();
+        category.deleted();
+        return repository.save(category);
+    }
 }
