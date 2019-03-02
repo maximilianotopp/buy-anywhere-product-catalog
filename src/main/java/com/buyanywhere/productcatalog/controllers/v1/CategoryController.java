@@ -15,15 +15,7 @@ public class CategoryController{
         this.repository = repository;
     }
 
-    @PostMapping
-    public Category post(@RequestBody Category category){
-        return repository.save(category);
-    }
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = "/{id}"
-    )
+    @GetMapping(value = "/{id}")
     public Category get(@PathVariable Long id) throws CategoryNotFoundException {
         Optional<Category> categoryOptional = repository.findById(id);
 
@@ -32,5 +24,10 @@ public class CategoryController{
         }
 
         return categoryOptional.get();
+    }
+
+    @PostMapping
+    public Category post(@RequestBody Category category){
+        return repository.save(category);
     }
 }
