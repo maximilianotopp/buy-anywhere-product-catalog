@@ -1,5 +1,6 @@
 package com.buyanywhere.productcatalog.controllers.v1;
 
+import com.buyanywhere.productcatalog.exceptions.ArgumentNotValidException;
 import com.buyanywhere.productcatalog.exceptions.CategoryNotFoundException;
 import com.buyanywhere.productcatalog.models.Category;
 import com.buyanywhere.productcatalog.repositories.CategoryRepository;
@@ -29,5 +30,19 @@ public class CategoryController{
     @PostMapping
     public Category post(@RequestBody Category category){
         return repository.save(category);
+    }
+
+    @PutMapping
+    private Category update(@RequestBody Category category){
+       long id = category.getId();
+       if(!repository.findById(id).isPresent() || repository.findById(id).get().isDeleted()){
+            throw new CategoryNotFoundException(id);
+       }
+
+       if (category.getName().isEmpty()) throw new ArgumentNotValidException("name");
+
+       if (category.getDisplayOrder() < 0) throw new ArgumentNotValidException("displayOrder");
+
+       return repository.save(category);
     }
 }
