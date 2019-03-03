@@ -17,17 +17,31 @@ public class CategoryController{
 
     @GetMapping(value = "/{id}")
     public Category get(@PathVariable long id) throws CategoryNotFoundException {
-        Optional<Category> categoryOptional = repository.findById(id);
-
-        if(!categoryOptional.isPresent() || categoryOptional.get().isDeleted()) {
+        if (!exist(id)) {
             throw new CategoryNotFoundException(id);
         }
 
-        return categoryOptional.get();
+        return repository.findById(id).get();
     }
 
     @PostMapping
     public Category post(@RequestBody Category category) {
         return repository.save(category);
+    }
+
+    @PutMapping
+    public Category put(@RequestBody Category category) throws CategoryNotFoundException{
+        long id = category.getId();
+        if (!exist(id)) {
+            throw new CategoryNotFoundException(id);
+        }
+
+        return repository.save(category);
+    }
+
+    private boolean exist(long id){
+        Optional<Category> categoryOptional = repository.findById(id);
+
+        return categoryOptional.isPresent() && !categoryOptional.get().isDeleted();
     }
 }
