@@ -42,4 +42,7 @@ public class Category{
         return deleted;
     }
 
+    public boolean setDeleted() {
+        return this.deleted = true;
+    }
 }
