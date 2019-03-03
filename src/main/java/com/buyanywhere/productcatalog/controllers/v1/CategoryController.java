@@ -17,9 +17,7 @@ public class CategoryController{
 
     @GetMapping(value = "/{id}")
     public Category get(@PathVariable Long id) throws CategoryNotFoundException {
-        Optional<Category> categoryOptional = repository.findById(id);
-
-        if (!categoryOptional.isPresent() || categoryOptional.get().isDeleted()) {
+        if(!exists(id)) {
             throw new CategoryNotFoundException(id);
         }
 
@@ -29,6 +27,25 @@ public class CategoryController{
     @PostMapping
     public Category post(@RequestBody Category category){
         return repository.save(category);
+    }
+
+    @PutMapping
+    private Category update(@RequestBody Category category) throws CategoryNotFoundException, ArgumentNotValidException{
+       if(!exists(category.getId())) {
+           throw new CategoryNotFoundException(category.getId());
+       }
+
+       if (category.getName().isEmpty()) throw new ArgumentNotValidException("name");
+
+       if (category.getDisplayOrder() < 0) throw new ArgumentNotValidException("displayOrder");
+
+       return repository.save(category);
+    }
+
+    private boolean exists(long id){
+        Optional<Category> categoryOptional = repository.findById(id);
+
+        return categoryOptional.isPresent() && !categoryOptional.get().isDeleted();
     }
 
     @DeleteMapping(value = "/{id}")
