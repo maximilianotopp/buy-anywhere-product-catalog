@@ -16,7 +16,7 @@ public class CategoryController{
     }
 
     @GetMapping(value = "/{id}")
-    public Category get(@PathVariable long id){
+    public Category get(@PathVariable long id) throws CategoryNotFoundException {
         Optional<Category> categoryOptional = repository.findById(id);
 
         if(!categoryOptional.isPresent() || categoryOptional.get().isDeleted()) {
