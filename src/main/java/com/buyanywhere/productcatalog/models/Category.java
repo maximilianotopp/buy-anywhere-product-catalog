@@ -13,7 +13,6 @@ public class Category {
     private long id;
     private String name;
     private int displayOrder;
-
     @JsonIgnore
     private boolean deleted;
 
@@ -42,7 +41,7 @@ public class Category {
         return deleted;
     }
 
-    public void deleted() {
+    public void delete() {
         this.deleted = true;
     }
 }

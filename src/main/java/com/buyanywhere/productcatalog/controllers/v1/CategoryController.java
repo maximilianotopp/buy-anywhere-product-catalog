@@ -1,5 +1,6 @@
 package com.buyanywhere.productcatalog.controllers.v1;
 
+import com.buyanywhere.productcatalog.exceptions.ArgumentNotValidException;
 import com.buyanywhere.productcatalog.exceptions.CategoryNotFoundException;
 import com.buyanywhere.productcatalog.models.Category;
 import com.buyanywhere.productcatalog.repositories.CategoryRepository;
@@ -21,7 +22,7 @@ public class CategoryController{
             throw new CategoryNotFoundException(id);
         }
 
-        return categoryOptional.get();
+        return repository.findById(id).get();
     }
 
     @PostMapping
@@ -30,7 +31,7 @@ public class CategoryController{
     }
 
     @PutMapping
-    private Category update(@RequestBody Category category) throws CategoryNotFoundException, ArgumentNotValidException{
+    private Category update(@RequestBody Category category) throws CategoryNotFoundException, ArgumentNotValidException {
        if(!exists(category.getId())) {
            throw new CategoryNotFoundException(category.getId());
        }
@@ -42,19 +43,20 @@ public class CategoryController{
        return repository.save(category);
     }
 
+    @DeleteMapping(value = "/{id}")
+    public Category delete(@PathVariable Long id) throws CategoryNotFoundException{
+        if(!exists(id)) {
+            throw new CategoryNotFoundException(id);
+        }
+
+        Category category = repository.findById(id).get();
+        category.delete();
+        return repository.save(category);
+    }
+
     private boolean exists(long id){
         Optional<Category> categoryOptional = repository.findById(id);
 
         return categoryOptional.isPresent() && !categoryOptional.get().isDeleted();
-    }
-
-    @DeleteMapping(value = "/{id}")
-    public Category delete(@PathVariable Long id) {
-        if(!repository.findById(id).isPresent() || repository.findById(id).get().isDeleted()){
-            throw new CategoryNotFoundException(id);
-        }
-        Category category = repository.findById(id).get();
-        category.deleted();
-        return repository.save(category);
     }
 }
