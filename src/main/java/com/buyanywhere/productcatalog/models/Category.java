@@ -1,7 +1,6 @@
 package com.buyanywhere.productcatalog.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -42,7 +41,7 @@ public class Category{
         return deleted;
     }
 
-    public boolean setDeleted() {
-        return this.deleted = true;
+    public void delete() {
+        this.deleted = true;
     }
 }
