@@ -9,7 +9,7 @@ import javax.persistence.Id;
 public class Category{
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
     private String name;
     private int displayOrder;
     @JsonIgnore
