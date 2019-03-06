@@ -20,10 +20,10 @@ public class CategoryController{
             method = RequestMethod.GET,
             value = "/{id}"
     )
-    public Category get(@PathVariable long id) throws CategoryNotFoundException {
+    public Category get(@PathVariable Long id) throws CategoryNotFoundException {
         Optional<Category> categoryOptional = repository.findById(id);
 
-        if(exist(id)){
+        if(!exists(id)){
             throw new CategoryNotFoundException(id);
         }
 
@@ -45,14 +45,14 @@ public class CategoryController{
     public Category put(@RequestBody Category category) throws CategoryNotFoundException{
         Long id = category.getId();
 
-        if(!exist(id)){
+        if(!exists(id)){
             throw new CategoryNotFoundException(id);
         }
 
         return repository.save(category);
     }
 
-    private boolean exist (long id){
+    private boolean exists (Long id){
         Optional<Category> categoryOptional = repository.findById(id);
         return !categoryOptional.get().isDeleted() && categoryOptional.isPresent();
     }
