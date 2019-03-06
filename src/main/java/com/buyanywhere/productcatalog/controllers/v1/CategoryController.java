@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-
 @RestController
 @RequestMapping("/v1/category")
 public class CategoryController{
@@ -24,7 +23,7 @@ public class CategoryController{
     public Category get(@PathVariable long id) throws CategoryNotFoundException {
         Optional<Category> categoryOptional = repository.findById(id);
 
-        if(!categoryOptional.isPresent() || categoryOptional.get().isDeleted()){
+        if(exist(id)){
             throw new CategoryNotFoundException(id);
         }
 
@@ -37,5 +36,24 @@ public class CategoryController{
     )
     public Category post(@RequestBody Category category){
         return repository.save(category);
+    }
+
+    @RequestMapping(
+            method = RequestMethod.PUT,
+            value = "/"
+    )
+    public Category put(@RequestBody Category category) throws CategoryNotFoundException{
+        Long id = category.getId();
+
+        if(!exist(id)){
+            throw new CategoryNotFoundException(id);
+        }
+
+        return repository.save(category);
+    }
+
+    private boolean exist (long id){
+        Optional<Category> categoryOptional = repository.findById(id);
+        return !categoryOptional.get().isDeleted() && categoryOptional.isPresent();
     }
 }
