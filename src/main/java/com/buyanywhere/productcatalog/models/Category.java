@@ -1,17 +1,19 @@
 package com.buyanywhere.productcatalog.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
 public class Category{
-
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
     private String name;
     private int displayOrder;
+    @JsonIgnore
     private boolean deleted;
 
     public Category(String name, int displayOrder, boolean deleted) {
@@ -24,7 +26,7 @@ public class Category{
 
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -38,5 +40,9 @@ public class Category{
 
     public boolean isDeleted() {
         return deleted;
+    }
+
+    public void delete(){
+        this.deleted = true;
     }
 }
