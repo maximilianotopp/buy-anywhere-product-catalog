@@ -18,18 +18,10 @@ public class CategoryController{
     }
 
     @RequestMapping(
-        method = RequestMethod.POST,
-        value = "/"
-    )
-    public Category post(@RequestBody Category category){
-        return repository.save(category);
-    }
-
-    @RequestMapping(
             method = RequestMethod.GET,
             value = "/{id}"
     )
-    public Category getById(@PathVariable long id) throws CategoryNotFoundException {
+    public Category get(@PathVariable long id) throws CategoryNotFoundException {
         Optional<Category> categoryOptional = repository.findById(id);
 
         if(!categoryOptional.isPresent() || categoryOptional.get().isDeleted()){
@@ -37,5 +29,13 @@ public class CategoryController{
         }
 
         return categoryOptional.get();
+    }
+
+    @RequestMapping(
+        method = RequestMethod.POST,
+        value = "/"
+    )
+    public Category post(@RequestBody Category category){
+        return repository.save(category);
     }
 }
