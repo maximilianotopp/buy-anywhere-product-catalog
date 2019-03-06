@@ -20,6 +20,10 @@ public class Category{
         this.deleted = deleted;
     }
 
+    public Category(){
+
+    }
+
     public long getId() {
         return id;
     }
