@@ -1,33 +1,31 @@
 package com.buyanywhere.productcatalog.controllers.v1;
 
+import com.buyanywhere.productcatalog.Services.ICategoriesService;
 import com.buyanywhere.productcatalog.dto.CategoryDto;
 import com.buyanywhere.productcatalog.exceptions.CategoryNotFoundException;
 import com.buyanywhere.productcatalog.exceptions.CategoryNotValidException;
 import com.buyanywhere.productcatalog.exceptions.DuplicatedCategoryException;
 import com.buyanywhere.productcatalog.models.Category;
-import com.buyanywhere.productcatalog.repositories.ICategoryRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/v1/category")
 public class CategoryController extends BaseController {
-    private ICategoryRepository repository;
+    private ICategoriesService service;
 
-    public CategoryController(ICategoryRepository repository, ModelMapper mapper) {
+    public CategoryController(ICategoriesService service, ModelMapper mapper) {
         super(mapper);
-        this.repository = repository;
+        this.service = service;
     }
 
     @GetMapping(value = "/{id}")
     public CategoryDto get(@PathVariable long id) throws CategoryNotFoundException{
-        if(!exists(id)){
+        if(!service.exists(id)){
             throw new CategoryNotFoundException(id);
         }
 
-        Category category = repository.findById(id).get();
+        Category category = service.findById(id);
 
         return mapper.map(category, CategoryDto.class);
     }
@@ -40,7 +38,7 @@ public class CategoryController extends BaseController {
 
         String categoryDtoName = categoryDto.getName().trim();
 
-        if(!repository.findByNameAndDeletedFalse(categoryDtoName).isEmpty()) {
+        if(service.isDuplicated(categoryDtoName)) {
             throw new DuplicatedCategoryException(categoryDtoName);
         }
 
@@ -48,13 +46,13 @@ public class CategoryController extends BaseController {
 
         category.setName(categoryDtoName);
 
-        return mapper.map(repository.save(category), CategoryDto.class);
+        return mapper.map(service.add(category), CategoryDto.class);
     }
 
     @PutMapping(value = "/{id}")
     public CategoryDto put(@PathVariable long id, @RequestBody CategoryDto categoryDto)
             throws CategoryNotValidException, CategoryNotFoundException {
-        if(!exists(id)){
+        if(!service.exists(id)){
             throw new CategoryNotFoundException(id);
         }
 
@@ -64,37 +62,29 @@ public class CategoryController extends BaseController {
 
         String categoryDtoName = categoryDto.getName().trim();
 
-        List<Category> matchingCategories = repository.findByNameAndDeletedFalse(categoryDtoName);
-
-        if(!matchingCategories.isEmpty() && matchingCategories.get(0).getId() != id) {
+        if(service.isDuplicated(id, categoryDtoName)) {
             throw new DuplicatedCategoryException(categoryDtoName);
         }
 
-        Category category = repository.findById(id).get();
+        Category category = service.findById(id);
 
         category.setName(categoryDtoName);
         category.setDisplayOrder(categoryDto.getDisplayOrder());
 
-        return mapper.map(repository.save(category), CategoryDto.class);
+        return mapper.map(service.update(category), CategoryDto.class);
     }
 
     @DeleteMapping(value = "/{id}")
     public void delete(@PathVariable long id) throws CategoryNotFoundException{
-        if(!exists(id)){
+        if(!service.exists(id)){
             throw new CategoryNotFoundException(id);
         }
 
-        Category category = repository.findById(id).get();
+        Category category = service.findById(id);
 
         category.delete();
 
-        repository.save(category);
-    }
-
-    private boolean exists(long id){
-        Optional<Category> categoryOptional = repository.findById(id);
-
-        return categoryOptional.isPresent() && !categoryOptional.get().isDeleted();
+        service.update(category);
     }
 
     private String getInvalidFields(CategoryDto categoryDto){
