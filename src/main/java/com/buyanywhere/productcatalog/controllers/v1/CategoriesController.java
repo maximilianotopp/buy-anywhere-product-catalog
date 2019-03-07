@@ -1,5 +1,6 @@
 package com.buyanywhere.productcatalog.controllers.v1;
 
+import com.buyanywhere.productcatalog.Services.ICategoriesService;
 import com.buyanywhere.productcatalog.dto.CategoryDto;
 import com.buyanywhere.productcatalog.enums.OrderByEnum;
 import com.buyanywhere.productcatalog.models.Category;
@@ -14,11 +15,11 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/v1/categories")
 public class CategoriesController extends BaseController {
-    private CategoryRepository repository;
+    private ICategoriesService service;
 
-    public CategoriesController(CategoryRepository repository, ModelMapper mapper) {
+    public CategoriesController(ICategoriesService service, ModelMapper mapper) {
         super(mapper);
-        this.repository = repository;
+        this.service = service;
     }
 
     @GetMapping
@@ -40,7 +41,7 @@ public class CategoriesController extends BaseController {
                             criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + filterBy + "%"));
         }
 
-        List<Category> categories = repository.findAll(specification);
+        List<Category> categories = service.findBySpecification(specification);
 
         return categories.stream()
                 .map(category -> mapper.map(category, CategoryDto.class))

@@ -1,10 +1,10 @@
 package com.buyanywhere.productcatalog.controllers.v1;
 
+import com.buyanywhere.productcatalog.Services.ICategoriesService;
 import com.buyanywhere.productcatalog.dto.CategoryDto;
 import com.buyanywhere.productcatalog.exceptions.CategoryNotFoundException;
 import com.buyanywhere.productcatalog.exceptions.CategoryNotValidException;
 import com.buyanywhere.productcatalog.models.Category;
-import com.buyanywhere.productcatalog.repositories.CategoryRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
@@ -12,20 +12,20 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/v1/category")
 public class CategoryController extends BaseController {
-    private CategoryRepository repository;
+    private ICategoriesService service;
 
-    public CategoryController(CategoryRepository repository, ModelMapper mapper) {
+    public CategoryController(ICategoriesService service, ModelMapper mapper) {
         super(mapper);
-        this.repository = repository;
+        this.service = service;
     }
 
     @GetMapping(value = "/{id}")
     public CategoryDto get(@PathVariable long id) throws CategoryNotFoundException{
-        if(!exists(id)){
+        if(!service.exists(id)){
             throw new CategoryNotFoundException(id);
         }
 
-        Category category = repository.findById(id).get();
+        Category category = service.findById(id);
 
         return mapper.map(category, CategoryDto.class);
     }
@@ -40,13 +40,13 @@ public class CategoryController extends BaseController {
 
         category.setName(categoryDto.getName().trim());
 
-        return mapper.map(repository.save(category), CategoryDto.class);
+        return mapper.map(service.add(category), CategoryDto.class);
     }
 
     @PutMapping(value = "/{id}")
     public CategoryDto put(@PathVariable long id, @RequestBody CategoryDto categoryDto)
             throws CategoryNotValidException, CategoryNotFoundException {
-        if(!exists(id)){
+        if(!service.exists(id)){
             throw new CategoryNotFoundException(id);
         }
 
@@ -54,31 +54,25 @@ public class CategoryController extends BaseController {
             throw new CategoryNotValidException(this.getInvalidFields(categoryDto));
         }
 
-        Category category = repository.findById(id).get();
+        Category category = service.findById(id);
 
         category.setName(categoryDto.getName().trim());
         category.setDisplayOrder(categoryDto.getDisplayOrder());
 
-        return mapper.map(repository.save(category), CategoryDto.class);
+        return mapper.map(service.update(category), CategoryDto.class);
     }
 
     @DeleteMapping(value = "/{id}")
     public void delete(@PathVariable long id) throws CategoryNotFoundException{
-        if(!exists(id)){
+        if(!service.exists(id)){
             throw new CategoryNotFoundException(id);
         }
 
-        Category category = repository.findById(id).get();
+        Category category = service.findById(id);
 
         category.delete();
 
-        repository.save(category);
-    }
-
-    private boolean exists(long id){
-        Optional<Category> categoryOptional = repository.findById(id);
-
-        return categoryOptional.isPresent() && !categoryOptional.get().isDeleted();
+        service.update(category);
     }
 
     private String getInvalidFields(CategoryDto categoryDto){
