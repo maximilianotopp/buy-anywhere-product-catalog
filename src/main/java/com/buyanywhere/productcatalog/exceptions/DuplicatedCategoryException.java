@@ -6,6 +6,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(value= HttpStatus.BAD_REQUEST)
 public class DuplicatedCategoryException extends RuntimeException {
     public DuplicatedCategoryException(String name){
-        super("The Category " + name + " is duplicated.");
+        super("The Category " + name + " already exists.");
     }
 }
