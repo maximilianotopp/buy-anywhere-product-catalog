@@ -1,5 +1,6 @@
-package com.buyanywhere.productcatalog.Services;
+package com.buyanywhere.productcatalog.services;
 
+import com.buyanywhere.productcatalog.exceptions.CategoryNotFoundException;
 import com.buyanywhere.productcatalog.models.Category;
 import com.buyanywhere.productcatalog.repositories.ICategoryRepository;
 import org.springframework.data.jpa.domain.Specification;
@@ -15,8 +16,14 @@ public class CategoriesService implements ICategoriesService {
     }
 
     @Override
-    public Category findById(Long id){
-        return repository.findById(id).get();
+    public Category findById(Long id) throws CategoryNotFoundException {
+        Optional<Category> category = repository.findById(id);
+
+        if(!category.isPresent()){
+            throw new CategoryNotFoundException(id);
+        }
+
+        return category.get();
     }
 
     @Override

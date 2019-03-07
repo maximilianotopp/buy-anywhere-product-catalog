@@ -1,12 +1,13 @@
-package com.buyanywhere.productcatalog.Services;
+package com.buyanywhere.productcatalog.services;
 
+import com.buyanywhere.productcatalog.exceptions.CategoryNotFoundException;
 import com.buyanywhere.productcatalog.models.Category;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
 public interface ICategoriesService {
-    Category findById(Long id);
+    Category findById(Long id) throws CategoryNotFoundException;
     boolean exists(Long id);
     boolean isDuplicated(String name);
     boolean isDuplicated(Long id, String name);
