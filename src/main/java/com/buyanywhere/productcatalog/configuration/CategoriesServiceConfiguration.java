@@ -1,0 +1,15 @@
+package com.buyanywhere.productcatalog.configuration;
+
+import com.buyanywhere.productcatalog.Services.CategoriesService;
+import com.buyanywhere.productcatalog.Services.ICategoriesService;
+import com.buyanywhere.productcatalog.repositories.ICategoryRepository;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class CategoriesServiceConfiguration {
+    @Bean
+    public ICategoriesService categoriesService(ICategoryRepository repository){
+        return new CategoriesService(repository);
+    }
+}
