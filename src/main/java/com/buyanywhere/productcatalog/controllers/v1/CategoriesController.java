@@ -3,7 +3,7 @@ package com.buyanywhere.productcatalog.controllers.v1;
 import com.buyanywhere.productcatalog.dto.CategoryDto;
 import com.buyanywhere.productcatalog.enums.OrderByEnum;
 import com.buyanywhere.productcatalog.models.Category;
-import com.buyanywhere.productcatalog.repositories.CategoryRepository;
+import com.buyanywhere.productcatalog.repositories.ICategoryRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/v1/categories")
 public class CategoriesController extends BaseController {
-    private CategoryRepository repository;
+    private ICategoryRepository repository;
 
-    public CategoriesController(CategoryRepository repository, ModelMapper mapper) {
+    public CategoriesController(ICategoryRepository repository, ModelMapper mapper) {
         super(mapper);
         this.repository = repository;
     }

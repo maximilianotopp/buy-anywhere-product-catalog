@@ -5,7 +5,7 @@ import com.buyanywhere.productcatalog.exceptions.CategoryNotFoundException;
 import com.buyanywhere.productcatalog.exceptions.CategoryNotValidException;
 import com.buyanywhere.productcatalog.exceptions.DuplicatedCategoryException;
 import com.buyanywhere.productcatalog.models.Category;
-import com.buyanywhere.productcatalog.repositories.CategoryRepository;
+import com.buyanywhere.productcatalog.repositories.ICategoryRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +14,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/v1/category")
 public class CategoryController extends BaseController {
-    private CategoryRepository repository;
+    private ICategoryRepository repository;
 
-    public CategoryController(CategoryRepository repository, ModelMapper mapper) {
+    public CategoryController(ICategoryRepository repository, ModelMapper mapper) {
         super(mapper);
         this.repository = repository;
     }
