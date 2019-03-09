@@ -1,6 +1,6 @@
 package com.buyanywhere.productcatalog.controllers.v1;
 
-import com.buyanywhere.productcatalog.Services.ICategoriesService;
+import com.buyanywhere.productcatalog.services.ICategoriesService;
 import com.buyanywhere.productcatalog.dto.CategoryDto;
 import com.buyanywhere.productcatalog.exceptions.CategoryNotFoundException;
 import com.buyanywhere.productcatalog.exceptions.CategoryNotValidException;

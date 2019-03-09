@@ -1,4 +1,4 @@
-package com.buyanywhere.productcatalog.Services;
+package com.buyanywhere.productcatalog.services;
 
 import com.buyanywhere.productcatalog.exceptions.CategoryNotFoundException;
 import com.buyanywhere.productcatalog.models.Category;
