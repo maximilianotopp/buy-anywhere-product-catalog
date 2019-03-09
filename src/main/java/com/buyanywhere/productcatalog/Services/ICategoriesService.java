@@ -1,9 +1,8 @@
-package com.buyanywhere.productcatalog.services;
+package com.buyanywhere.productcatalog.Services;
 
 import com.buyanywhere.productcatalog.exceptions.CategoryNotFoundException;
 import com.buyanywhere.productcatalog.models.Category;
 import org.springframework.data.jpa.domain.Specification;
-
 import java.util.List;
 
 public interface ICategoriesService {
