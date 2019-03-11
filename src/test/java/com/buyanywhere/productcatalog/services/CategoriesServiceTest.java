@@ -61,4 +61,11 @@ public class CategoriesServiceTest {
 
         Category category = service.findById((long) 5);
     }
+
+    @Test(expected = CategoryNotFoundException.class)
+    public void findById_whenNonExistingId_shouldThrowCategoryNotFoundException(){
+        CategoriesService service = new CategoriesService(categoryRepository);
+
+        Category category = service.findById((long) 6);
+    }
 }
