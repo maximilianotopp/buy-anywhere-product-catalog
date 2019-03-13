@@ -18,7 +18,7 @@ public class CategoriesService implements ICategoriesService {
     public Category findById(Long id) throws CategoryNotFoundException {
         Optional<Category> category = repository.findById(id);
 
-        if(!category.isPresent()){
+        if(!category.isPresent() || category.get().isDeleted()){
             throw new CategoryNotFoundException(id);
         }
 
