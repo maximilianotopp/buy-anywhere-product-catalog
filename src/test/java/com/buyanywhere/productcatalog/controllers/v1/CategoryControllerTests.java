@@ -19,6 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.sun.javaws.JnlpxArgs.verify;
 import static org.mockito.ArgumentMatchers.notNull;
 
 @RunWith(SpringRunner.class)
@@ -27,9 +28,11 @@ public class CategoryControllerTests {
     @MockBean
     private CategoriesService service;
 
+    private List<Category> categories;
+
     @Before
     public void setup(){
-        List<Category> categories = new ArrayList<>();
+        categories = new ArrayList<>();
         Category homeCategory = new Category("Home", 1);
         categories.add(homeCategory);
 
@@ -205,7 +208,11 @@ public class CategoryControllerTests {
     @Test
     public void delete_whenExistingId_shouldReturnCategory(){
         CategoryController controller = new CategoryController(service, new ModelMapper());
+        controller.delete(1);
 
-        controller.delete(3);
+        Category deletedCategory = categories.get(0);
+
+        Assert.assertTrue(deletedCategory.isDeleted());
+        Mockito.verify(service, Mockito.atLeastOnce()).update(deletedCategory);
     }
 }
