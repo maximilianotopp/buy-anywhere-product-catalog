@@ -11,16 +11,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import static org.mockito.ArgumentMatchers.notNull;
 import org.mockito.internal.util.reflection.FieldSetter;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.sun.javaws.JnlpxArgs.verify;
-import static org.mockito.ArgumentMatchers.notNull;
 
 @RunWith(SpringRunner.class)
 public class CategoryControllerTests {
@@ -106,6 +103,28 @@ public class CategoryControllerTests {
         CategoryController controller = new CategoryController(service, new ModelMapper());
 
         CategoryDto dto = new CategoryDto();
+        dto.setName("InvalidDisplayOrder");
+        dto.setDisplayOrder(-1);
+
+        controller.post(dto);
+    }
+
+    @Test(expected = CategoryNotValidException.class)
+    public void post_whenNameIsNullAndDisplayOrderIsNotValid_shouldReturnException(){
+        CategoryController controller = new CategoryController(service, new ModelMapper());
+
+        CategoryDto dto = new CategoryDto();
+        dto.setDisplayOrder(-1);
+
+        controller.post(dto);
+    }
+
+    @Test(expected = CategoryNotValidException.class)
+    public void post_whenNameIsEmptyAndDisplayOrderIsNotValid_shouldReturnException(){
+        CategoryController controller = new CategoryController(service, new ModelMapper());
+
+        CategoryDto dto = new CategoryDto();
+        dto.setName("");
         dto.setDisplayOrder(-1);
 
         controller.post(dto);
@@ -168,6 +187,28 @@ public class CategoryControllerTests {
         CategoryController controller = new CategoryController(service, new ModelMapper());
 
         CategoryDto dto = new CategoryDto();
+        dto.setName("InvalidDisplayOrder");
+        dto.setDisplayOrder(-1);
+
+        controller.put(4, dto);
+    }
+
+    @Test(expected = CategoryNotValidException.class)
+    public void put_whenNameIsNullAndDisplayOrderIsNotValid_shouldReturnException(){
+        CategoryController controller = new CategoryController(service, new ModelMapper());
+
+        CategoryDto dto = new CategoryDto();
+        dto.setDisplayOrder(-1);
+
+        controller.put(4, dto);
+    }
+
+    @Test(expected = CategoryNotValidException.class)
+    public void put_whenNameIsEmptyAndDisplayOrderIsNotValid_shouldReturnException(){
+        CategoryController controller = new CategoryController(service, new ModelMapper());
+
+        CategoryDto dto = new CategoryDto();
+        dto.setName("");
         dto.setDisplayOrder(-1);
 
         controller.put(4, dto);
