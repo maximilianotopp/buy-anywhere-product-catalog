@@ -32,4 +32,20 @@ public class CategoryDto {
     public boolean isValid(){
         return !(name == null || name.trim().isEmpty() || displayOrder < 0);
     }
+
+    public String getInvalidFields(){
+        String invalidFields = new String();
+
+        if(name == null || name.trim().isEmpty()){
+            invalidFields = "name";
+        }
+
+        if(displayOrder < 0){
+            invalidFields = invalidFields.trim().isEmpty()
+                    ? "displayOrder"
+                    : invalidFields + ", displayOrder";
+        }
+
+        return invalidFields;
+    }
 }
