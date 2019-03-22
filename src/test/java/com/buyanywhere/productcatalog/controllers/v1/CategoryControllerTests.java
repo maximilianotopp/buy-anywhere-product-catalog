@@ -14,7 +14,6 @@ import org.mockito.internal.util.reflection.FieldSetter;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
-
 import static org.mockito.ArgumentMatchers.notNull;
 
 @RunWith(SpringRunner.class)
@@ -25,23 +24,29 @@ public class CategoryControllerTests {
 
     @Test
     public void get_whenExists_shouldReturnCategory(){
-        Category category = new Category("Home", 1);
-        MockExists(1, true);
-        MockFindById(1, category);
+        final long id = 1;
+        final String name = "Home";
+        final int displayOrder = 1;
+
+        Category category = new Category(name, displayOrder);
+        MockExists(id, true);
+        MockFindById(id, category);
 
         CategoryController controller = new CategoryController(service, new ModelMapper());
-        CategoryDto dto = controller.get(1);
+        CategoryDto dto = controller.get(id);
 
-        Assert.assertEquals("Home", dto.getName());
-        Assert.assertEquals(1, dto.getDisplayOrder());
+        Assert.assertEquals(name, dto.getName());
+        Assert.assertEquals(displayOrder, dto.getDisplayOrder());
     }
 
     @Test(expected = CategoryNotFoundException.class)
     public void get_whenNotExists_shouldReturnCategory(){
-        MockExists(2, false);
+        final long id = 2;
+
+        MockExists(id, false);
 
         CategoryController controller = new CategoryController(service, new ModelMapper());
-        controller.get(2);
+        controller.get(id);
     }
 
     @Test(expected = CategoryNotValidException.class)
@@ -96,7 +101,9 @@ public class CategoryControllerTests {
     @Test(expected = DuplicatedCategoryException.class)
     public void post_whenNameIsDuplicated_shouldReturnException(){
         final String name = "DuplicatedName";
+
         MockIsDuplicated(name, true);
+
         CategoryController controller = new CategoryController(service, new ModelMapper());
 
         CategoryDto dto = new CategoryDto();
@@ -107,8 +114,10 @@ public class CategoryControllerTests {
 
     @Test
     public void post_whenNameIsNotDuplicatedAndValid_shouldReturnCategory(){
+        final long id = 1;
         final String name = "NewCategory";
         final int displayOrder = 5;
+
         MockIsDuplicated(name, false);
 
         CategoryDto dto = new CategoryDto();
@@ -116,7 +125,7 @@ public class CategoryControllerTests {
         dto.setDisplayOrder(displayOrder);
 
         Category category = new Category(name, displayOrder);
-        SetField(category, "id", (long) 1);
+        SetField(category, "id", id);
 
         MockAdd(category);
 
@@ -124,97 +133,119 @@ public class CategoryControllerTests {
 
         CategoryDto resultDto = controller.post(dto);
 
-        Assert.assertEquals((long)1, (long)resultDto.getId());
+        Assert.assertEquals(id, (long) resultDto.getId());
         Assert.assertEquals(name, resultDto.getName());
         Assert.assertEquals(displayOrder, resultDto.getDisplayOrder());
     }
 
     @Test(expected = CategoryNotFoundException.class)
     public void put_whenNotExists_shouldReturnException(){
+        final long id = 1;
         final String name = "NotExists";
-        MockExists(1, false);
+
+        MockExists(id, false);
 
         CategoryController controller = new CategoryController(service, new ModelMapper());
 
         CategoryDto dto = new CategoryDto();
         dto.setName(name);
 
-        controller.put(1, dto);
+        controller.put(id, dto);
     }
 
     @Test(expected = CategoryNotValidException.class)
     public void put_whenNameIsNull_shouldReturnException(){
-        MockExists(1, true);
+        final long id = 1;
+
+        MockExists(id, true);
+
         CategoryController controller = new CategoryController(service, new ModelMapper());
 
-        controller.put(1, new CategoryDto());
+        controller.put(id, new CategoryDto());
     }
 
     @Test(expected = CategoryNotValidException.class)
     public void put_whenNameIsEmpty_shouldReturnException(){
-        MockExists(1, true);
+        final long id = 1;
+
+        MockExists(id, true);
+
         CategoryController controller = new CategoryController(service, new ModelMapper());
 
         CategoryDto dto = new CategoryDto();
         dto.setName("");
 
-        controller.put(1, dto);
+        controller.put(id, dto);
     }
 
     @Test(expected = CategoryNotValidException.class)
     public void put_whenDisplayOrderIsNotValid_shouldReturnException(){
-        MockExists(1, true);
+        final long id = 1;
+
+        MockExists(id, true);
+
         CategoryController controller = new CategoryController(service, new ModelMapper());
 
         CategoryDto dto = new CategoryDto();
         dto.setName("InvalidDisplayOrder");
         dto.setDisplayOrder(-1);
 
-        controller.put(1, dto);
+        controller.put(id, dto);
     }
 
     @Test(expected = CategoryNotValidException.class)
     public void put_whenNameIsNullAndDisplayOrderIsNotValid_shouldReturnException(){
-        MockExists(1, true);
+        final long id = 1;
+
+        MockExists(id, true);
+
         CategoryController controller = new CategoryController(service, new ModelMapper());
 
         CategoryDto dto = new CategoryDto();
         dto.setDisplayOrder(-1);
 
-        controller.put(1, dto);
+        controller.put(id, dto);
     }
 
     @Test(expected = CategoryNotValidException.class)
     public void put_whenNameIsEmptyAndDisplayOrderIsNotValid_shouldReturnException(){
-        MockExists(1, true);
+        final long id = 1;
+
+        MockExists(id, true);
+
         CategoryController controller = new CategoryController(service, new ModelMapper());
 
         CategoryDto dto = new CategoryDto();
         dto.setName("");
         dto.setDisplayOrder(-1);
 
-        controller.put(1, dto);
+        controller.put(id, dto);
     }
 
     @Test(expected = DuplicatedCategoryException.class)
     public void put_whenNameIsDuplicated_shouldReturnException(){
+        final long id = 1;
         final String name = "DuplicatedName";
-        MockExists(1, true);
-        MockIsDuplicated(1, name, true);
+
+        MockExists(id, true);
+        MockIsDuplicated(id, name, true);
+
         CategoryController controller = new CategoryController(service, new ModelMapper());
 
         CategoryDto dto = new CategoryDto();
         dto.setName(name);
 
-        controller.put(1, dto);
+        controller.put(id, dto);
     }
 
     @Test
     public void put_whenExistsAndNameIsNotDuplicatedAndValid_shouldReturnCategory(){
+        final long id = 1;
         final String name = "Electronics";
         final int displayOrder = 7;
-        MockExists(1, true);
-        MockIsDuplicated(1, name, false);
+
+        MockExists(id, true);
+        MockIsDuplicated(id, name, false);
 
         CategoryController controller = new CategoryController(service, new ModelMapper());
 
@@ -223,34 +254,40 @@ public class CategoryControllerTests {
         dto.setDisplayOrder(displayOrder);
 
         Category category = new Category(name, displayOrder);
-        SetField(category, "id", (long)1);
+        SetField(category, "id", id);
 
         MockUpdate(category);
-        MockFindById(1, category);
+        MockFindById(id, category);
 
-        CategoryDto resultDto = controller.put(1, dto);
+        CategoryDto resultDto = controller.put(id, dto);
 
-        Assert.assertEquals((long) 1, (long)resultDto.getId());
+        Assert.assertEquals(id, (long) resultDto.getId());
         Assert.assertEquals(name, resultDto.getName());
         Assert.assertEquals(displayOrder, resultDto.getDisplayOrder());
     }
 
     @Test(expected = CategoryNotFoundException.class)
     public void delete_whenNotExistingId_shouldReturnException(){
-        MockExists(1, false);
+        final long id = 1;
+
+        MockExists(id, false);
+
         CategoryController controller = new CategoryController(service, new ModelMapper());
 
-        controller.delete(1);
+        controller.delete(id);
     }
 
     @Test
     public void delete_whenExistingId_shouldReturnCategory(){
-        MockExists(1, true);
+        final long id = 1;
+
         CategoryController controller = new CategoryController(service, new ModelMapper());
 
         Category category = new Category("Name", 1);
 
-        MockFindById(1, category);
+        MockExists(id, true);
+        MockFindById(id, category);
+
         controller.delete(1);
 
         Assert.assertTrue(category.isDeleted());

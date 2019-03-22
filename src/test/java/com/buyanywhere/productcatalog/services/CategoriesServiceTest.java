@@ -10,13 +10,13 @@ import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.FieldSetter;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 public class CategoriesServiceTest {
+
     @MockBean
     private ICategoryRepository categoryRepository;
 
@@ -64,6 +64,7 @@ public class CategoriesServiceTest {
     @Test
     public void exists_whenExistingIdAndNotDeleted_shouldReturnTrue(){
         final long id = 3;
+
         CategoriesService service = new CategoriesService(categoryRepository);
 
         Category category = new Category("Electronics", 1);
@@ -76,6 +77,7 @@ public class CategoriesServiceTest {
     @Test
     public void exists_whenExistingIdAndDeleted_shouldReturnFalse(){
         final long id = 5;
+
         CategoriesService service = new CategoriesService(categoryRepository);
 
         Category deletedCategory = new Category("Computers", 4);
@@ -96,6 +98,7 @@ public class CategoriesServiceTest {
     @Test
     public void isDuplicated_withNameOnly_whenNoDuplicatedNames_shouldReturnFalse(){
         final String name = "NewName";
+
         CategoriesService service = new CategoriesService(categoryRepository);
 
         MockFindByNameAndDeletedFalse(name, new ArrayList<>());
@@ -119,6 +122,7 @@ public class CategoriesServiceTest {
     @Test
     public void isDuplicated_withIdAndName_whenNoDuplicatedNames_shouldReturnFalse(){
         final String name = "NewName";
+
         CategoriesService service = new CategoriesService(categoryRepository);
 
         MockFindByNameAndDeletedFalse(name, new ArrayList<>());
@@ -129,6 +133,7 @@ public class CategoriesServiceTest {
     @Test
     public void isDuplicated_withIdAndName_whenDuplicatedNamesAndDifferentId_shouldReturnTrue(){
         final String name = "NotDeletedCategory";
+
         CategoriesService service = new CategoriesService(categoryRepository);
 
         Category notDeletedCategory = new Category(name, 4);
@@ -142,6 +147,7 @@ public class CategoriesServiceTest {
     @Test
     public void isDuplicated_withIdAndName_whenDuplicatedNamesAndDifferentId_butDuplicatedIsDeleted_shouldReturnFalse(){
         final String name = "DeletedCategory";
+
         CategoriesService service = new CategoriesService(categoryRepository);
 
         MockFindByNameAndDeletedFalse(name, new ArrayList<>());

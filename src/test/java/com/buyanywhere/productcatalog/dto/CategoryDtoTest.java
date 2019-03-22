@@ -1,38 +1,12 @@
 package com.buyanywhere.productcatalog.dto;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 public class CategoryDtoTest {
-
-    private CategoryDto categoryDto;
-
-    @Before
-    public void setup(){
-        categoryDto = new CategoryDto();
-        categoryDto.setId((long) 1);
-        categoryDto.setName("Home");
-        categoryDto.setDisplayOrder(1);
-    }
-
-    @Test
-    public void getId_shouldReturnId(){
-        Assert.assertTrue(this.categoryDto.getId() == 1);
-    }
-
-    @Test
-    public void getName_shouldReturnName(){
-        Assert.assertEquals(this.categoryDto.getName(), "Home");
-    }
-
-    @Test
-    public void getDisplayOrder_shouldReturnDisplayOrder(){
-        Assert.assertEquals(this.categoryDto.getDisplayOrder(), 1);
-    }
 
     @Test
     public void isValid_whenNameIsNull_shouldReturnFalse(){
@@ -59,8 +33,12 @@ public class CategoryDtoTest {
     }
 
     @Test
-    public void isValid_whenNameAndDisplayOrderAreValid_shouldReturnFalse(){
-        Assert.assertTrue(this.categoryDto.isValid());
+    public void isValid_whenNameAndDisplayOrderAreValid_shouldReturnTrue(){
+        CategoryDto dto = new CategoryDto();
+        dto.setName("Home");
+        dto.setDisplayOrder(1);
+
+        Assert.assertTrue(dto.isValid());
     }
 
     @Test
@@ -81,7 +59,7 @@ public class CategoryDtoTest {
     }
 
     @Test
-    public void getInvalidFields_whenDisplayOrderIsNotValid_shouldReturnName(){
+    public void getInvalidFields_whenDisplayOrderIsNotValid_shouldReturnDisplayOrder(){
         CategoryDto dto = new CategoryDto();
         dto.setName("Home");
         dto.setDisplayOrder(-2);
@@ -90,11 +68,20 @@ public class CategoryDtoTest {
     }
 
     @Test
-    public void getInvalidFields_whenNameAndDisplayOrderAreNotValid_shouldReturnName(){
+    public void getInvalidFields_whenNameAndDisplayOrderAreNotValid_shouldReturnNameAndDisplayOrder(){
         CategoryDto dto = new CategoryDto();
         dto.setName("");
         dto.setDisplayOrder(-2);
 
         Assert.assertEquals(dto.getInvalidFields(), "name, displayOrder");
+    }
+
+    @Test
+    public void getInvalidFields_whenNameAndDisplayOrderAreValid_shouldReturnAnEmptyString(){
+        CategoryDto dto = new CategoryDto();
+        dto.setName("NameAndDisplayOrderValid");
+        dto.setDisplayOrder(2);
+
+        Assert.assertEquals(dto.getInvalidFields(), "");
     }
 }
