@@ -33,7 +33,7 @@ public class CategoryController extends BaseController {
     @PostMapping
     public CategoryDto post(@RequestBody CategoryDto categoryDto) throws CategoryNotValidException{
         if(!categoryDto.isValid()){
-            throw new CategoryNotValidException(this.getInvalidFields(categoryDto));
+            throw new CategoryNotValidException(categoryDto.getInvalidFields());
         }
 
         String categoryDtoName = categoryDto.getName().trim();
@@ -57,7 +57,7 @@ public class CategoryController extends BaseController {
         }
 
         if(!categoryDto.isValid()){
-            throw new CategoryNotValidException(this.getInvalidFields(categoryDto));
+            throw new CategoryNotValidException(categoryDto.getInvalidFields());
         }
 
         String categoryDtoName = categoryDto.getName().trim();
@@ -85,23 +85,5 @@ public class CategoryController extends BaseController {
         category.delete();
 
         service.update(category);
-    }
-
-    private String getInvalidFields(CategoryDto categoryDto){
-        String invalidFields = new String();
-
-        String name = categoryDto.getName();
-
-        if(name == null || name.trim().isEmpty()){
-            invalidFields = "name";
-        }
-
-        if(categoryDto.getDisplayOrder() < 0){
-            invalidFields = invalidFields.trim().isEmpty()
-                    ? "displayOrder"
-                    : invalidFields + ", displayOrder";
-        }
-
-        return invalidFields;
     }
 }
