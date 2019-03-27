@@ -12,7 +12,7 @@ public class JacksonConfiguration {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibility(mapper.getSerializationConfig().getDefaultVisibilityChecker()
             .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
-            .withGetterVisibility(JsonAutoDetect.Visibility.ANY)
+            .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
             .withSetterVisibility(JsonAutoDetect.Visibility.ANY)
             .withIsGetterVisibility(JsonAutoDetect.Visibility.NONE));
 
