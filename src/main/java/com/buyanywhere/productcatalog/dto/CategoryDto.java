@@ -1,5 +1,8 @@
 package com.buyanywhere.productcatalog.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CategoryDto {
     private Long id;
     private String name;
@@ -34,18 +37,16 @@ public class CategoryDto {
     }
 
     public String getInvalidFields(){
-        String invalidFields = new String();
+        List<String> invalidFields = new ArrayList<>();
 
         if(name == null || name.trim().isEmpty()){
-            invalidFields = "name";
+            invalidFields.add("name");
         }
 
         if(displayOrder < 0){
-            invalidFields = invalidFields.trim().isEmpty()
-                    ? "displayOrder"
-                    : invalidFields + ", displayOrder";
+            invalidFields.add("displayOrder");
         }
 
-        return invalidFields;
+        return String.join(", ", invalidFields);
     }
 }
