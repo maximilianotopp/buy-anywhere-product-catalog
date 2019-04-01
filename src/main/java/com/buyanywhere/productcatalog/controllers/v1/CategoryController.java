@@ -31,7 +31,8 @@ public class CategoryController extends BaseController {
     }
 
     @PostMapping
-    public CategoryDto post(@RequestBody CategoryDto categoryDto) throws CategoryNotValidException{
+    public CategoryDto post(@RequestBody CategoryDto categoryDto)
+            throws CategoryNotValidException, DuplicatedCategoryException{
         if(!categoryDto.isValid()){
             throw new CategoryNotValidException(categoryDto.getInvalidFields());
         }
@@ -51,7 +52,7 @@ public class CategoryController extends BaseController {
 
     @PutMapping(value = "/{id}")
     public CategoryDto put(@PathVariable long id, @RequestBody CategoryDto categoryDto)
-            throws CategoryNotValidException, CategoryNotFoundException {
+            throws CategoryNotValidException, CategoryNotFoundException, DuplicatedCategoryException {
         if(!service.exists(id)){
             throw new CategoryNotFoundException(id);
         }
