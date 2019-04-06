@@ -40,7 +40,7 @@ public class CategoryControllerTests {
     }
 
     @Test(expected = CategoryNotFoundException.class)
-    public void get_whenNotExists_shouldReturnCategory(){
+    public void get_whenNotExists_shouldReturnException(){
         final long id = 2;
 
         MockExists(id, false);
